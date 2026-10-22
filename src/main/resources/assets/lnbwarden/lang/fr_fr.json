@@ -1,0 +1,138 @@
+{
+  "commands.lnbwarden.status": "LNB Warden %s, API : %s",
+  "commands.lnbwarden.status.api.configured": "configurée",
+  "commands.lnbwarden.status.api.missing": "non configurée",
+  "commands.lnbwarden.status.mode": "Mode d’authentification : %s",
+  "commands.lnbwarden.status.api_health": "API : dernier succès %s, dernière erreur %s",
+  "commands.lnbwarden.status.api_error": "%s (%s)",
+  "commands.lnbwarden.status.events.connected": "Flux d’événements : connecté depuis %s",
+  "commands.lnbwarden.status.events.disconnected": "Flux d’événements : déconnecté depuis %s (%s)",
+  "commands.lnbwarden.status.heartbeat": "Heartbeat : %s, sessions suivies : %s",
+  "commands.lnbwarden.status.heartbeat.ok": "OK à %s",
+  "commands.lnbwarden.status.heartbeat.error": "échec à %s (%s)",
+  "commands.lnbwarden.status.never": "jamais",
+  "commands.lnbwarden.status.none": "aucune",
+
+  "commands.lnbwarden.auth.mode.set": "Mode d’authentification réglé sur %s. Il s’applique au prochain joueur qui se connecte.",
+
+  "lnbwarden.configuration.title": "Configuration de LNB Warden",
+  "lnbwarden.configuration.section.lnbwarden.client.toml": "Configuration client",
+  "lnbwarden.configuration.section.lnbwarden.client.toml.title": "Configuration client de LNB Warden",
+  "lnbwarden.configuration.section.lnbwarden.server.toml": "Configuration serveur",
+  "lnbwarden.configuration.section.lnbwarden.server.toml.title": "Configuration serveur LNB Warden",
+  "lnbwarden.configuration.apiUrl": "URL de l’API de LNB",
+  "lnbwarden.configuration.serverAddress": "Adresse du serveur",
+  "lnbwarden.configuration.api": "API",
+  "lnbwarden.configuration.url": "URL de l’API",
+  "lnbwarden.configuration.token": "Jeton de l’API",
+
+  "screen.lnbwarden.link.title": "Associer LNB Warden à ton compte LNB",
+  "screen.lnbwarden.link.requesting": "Demande d’un code à LNB%s",
+  "screen.lnbwarden.link.instructions": "Saisis ce code sur %s",
+  "screen.lnbwarden.link.time_left": "Expire dans %s",
+  "screen.lnbwarden.link.open": "Ouvrir le navigateur",
+  "screen.lnbwarden.link.copy": "Copier le code",
+  "screen.lnbwarden.link.new_code": "Nouveau code",
+  "screen.lnbwarden.link.retry": "Réessayer",
+  "screen.lnbwarden.link.denied": "Association refusée sur le site",
+  "screen.lnbwarden.link.expired": "Code expiré",
+  "screen.lnbwarden.link.too_many": "Trop de codes demandés. Attends quelques minutes, puis réessaie.",
+  "screen.lnbwarden.link.unreachable": "LNB est injoignable. Vérifie ta connexion, puis réessaie.",
+  "screen.lnbwarden.link.poll_failed": "LNB est injoignable, nouvel essai en cours…",
+
+  "toast.lnbwarden.linked.title": "LNB Warden",
+  "toast.lnbwarden.linked": "Associé à %s",
+
+  "screen.lnbwarden.status.not_linked": "Non associé à LNB",
+  "screen.lnbwarden.status.checking": "Vérification de ton association LNB%s",
+  "screen.lnbwarden.status.linked": "LNB : %s",
+  "screen.lnbwarden.status.accounts": "Comptes Minecraft : %s (%s)",
+  "screen.lnbwarden.status.no_accounts": "Aucun compte Minecraft lié pour l’instant (%s)",
+  "screen.lnbwarden.status.banned": "Banni jusqu’au %s : %s",
+  "screen.lnbwarden.status.banned_permanent": "Banni définitivement : %s",
+  "screen.lnbwarden.status.token_rejected": "Ton association LNB a expiré ou a été révoquée",
+  "screen.lnbwarden.status.unreachable": "LNB est injoignable",
+  "screen.lnbwarden.status.refused": "LNB a refusé cet appareil (%s)",
+  "screen.lnbwarden.status.link": "Associer",
+  "screen.lnbwarden.status.retry": "Réessayer",
+  "screen.lnbwarden.status.sign_out": "Se déconnecter",
+
+  "screen.lnbwarden.account.button": "Compte",
+  "screen.lnbwarden.account.title": "Compte LNB",
+  "screen.lnbwarden.account.website": "Gérer sur le site",
+  "screen.lnbwarden.account.badge.linked": "Associé",
+  "screen.lnbwarden.account.badge.not_linked": "Non associé",
+  "screen.lnbwarden.account.badge.banned": "Banni",
+  "screen.lnbwarden.account.badge.unreachable": "Impossible de joindre LNB",
+  "screen.lnbwarden.account.badge.refused": "Refusé par LNB",
+  "screen.lnbwarden.account.link_hint": "Associe cet ordinateur pour jouer sur le serveur LNB.",
+  "screen.lnbwarden.account.retrying": "Nouvel essai dans %s s.",
+  "screen.lnbwarden.account.shown_as": "Affiché en jeu comme %s",
+  "screen.lnbwarden.account.name_hidden": "Ton nom est masqué en jeu",
+  "screen.lnbwarden.account.device": "Cet ordinateur : %s · jusqu’au %s",
+  "screen.lnbwarden.account.accounts": "Comptes Minecraft",
+  "screen.lnbwarden.account.count": "%s sur %s",
+  "screen.lnbwarden.account.no_accounts": "Aucun compte Minecraft pour l’instant. Rejoins le serveur pour en lier un.",
+  "screen.lnbwarden.account.playing": "● En jeu",
+  "screen.lnbwarden.account.never_seen": "Pas encore vu sur le serveur",
+  "screen.lnbwarden.account.last_seen": "Vu le %s",
+  "screen.lnbwarden.account.played": "%s de jeu",
+  "screen.lnbwarden.account.hours": "%s h %s min",
+  "screen.lnbwarden.account.minutes": "%s min",
+
+  "disconnect.lnbwarden.no_token": "Associe le mod à ton compte LNB depuis le menu principal.",
+
+  "disconnect.lnbwarden.token_rejected": "Ton association LNB a expiré ou a été révoquée. Associe à nouveau le mod depuis le menu principal.",
+
+  "disconnect.lnbwarden.client_api_unreachable": "Ton ordinateur n’a pas pu joindre l’API de LNB. Réessaie dans un instant.",
+
+  "disconnect.lnbwarden.untrusted_server": "LNB Warden n’a pas reconnu l’adresse de ce serveur. Rejoins-le avec le bouton Multijoueur du menu principal.",
+
+  "disconnect.lnbwarden.link_declined": "Tu dois lier ce compte Minecraft pour jouer ici.",
+
+  "disconnect.lnbwarden.no_mod": "Ce serveur nécessite le mod LNB Warden.",
+
+  "disconnect.lnbwarden.timed_out": "LNB Warden n’a pas répondu à temps. Réessaie.",
+
+  "disconnect.lnbwarden.api_unreachable": "L’API de LNB est injoignable, réessaie dans un instant.",
+
+  "disconnect.lnbwarden.banned_permanent": "Tu es banni définitivement du serveur LNB.\nRaison : %s",
+
+  "disconnect.lnbwarden.banned": "Tu es banni du serveur LNB jusqu’au %s.\nRaison : %s",
+
+  "disconnect.lnbwarden.linked_elsewhere": "Le compte Minecraft %s est lié à un autre compte LNB.",
+
+  "disconnect.lnbwarden.account_limit_reached": "Tu as atteint ta limite de %s comptes Minecraft. Délies-en un sur le site LNB pour jouer avec celui-ci.",
+
+  "disconnect.lnbwarden.not_linked": "Le compte Minecraft %s n’est pas lié à ton compte LNB. Reconnecte-toi pour le lier.",
+
+  "disconnect.lnbwarden.school_not_allowed": "Les joueurs de ton école ne peuvent pas jouer sur le serveur LNB.",
+
+  "disconnect.lnbwarden.invalid_ticket": "L’authentification a échoué, réessaie.",
+
+  "disconnect.lnbwarden.unlinked": "Ce compte Minecraft a été délié de ton compte LNB.",
+
+  "disconnect.lnbwarden.device_revoked": "Cet ordinateur a été déconnecté de ton compte LNB. Associe à nouveau le mod depuis le menu principal.",
+
+  "screen.lnbwarden.confirm.title": "Lier ce compte Minecraft ?",
+  "screen.lnbwarden.confirm.question": "Lier le compte Minecraft %s à ton compte LNB (%s) ?",
+  "screen.lnbwarden.confirm.used": "%s sur %s comptes liés.",
+  "screen.lnbwarden.confirm.full": "Tu as déjà lié %s comptes sur %s, %s ne peut donc pas être lié. Délie d’abord un compte sur le site LNB.",
+  "screen.lnbwarden.confirm.link": "Lier",
+
+  "chat.lnbwarden.guest": "Tu joues en tant qu’invité : %s",
+  "chat.lnbwarden.guest.no_mod": "tu n’as pas le mod LNB Warden.",
+  "chat.lnbwarden.guest.no_answer": "LNB Warden n’a pas répondu à temps.",
+  "chat.lnbwarden.guest.not_linked": "ton mod n’est associé à aucun compte LNB.",
+  "chat.lnbwarden.guest.client_api_unreachable": "ton ordinateur n’a pas pu joindre l’API de LNB.",
+  "chat.lnbwarden.guest.untrusted_server": "LNB Warden n’a pas reconnu l’adresse de ce serveur.",
+  "chat.lnbwarden.guest.link_declined": "tu n’as pas lié ce compte Minecraft.",
+  "chat.lnbwarden.guest.api_unreachable": "l’API de LNB est injoignable.",
+
+  "chat.lnbwarden.linked": "%s est maintenant lié à ton compte LNB.",
+
+  "chat.lnbwarden.warning": "Avertissement de l’équipe LNB : %s",
+
+  "chat.lnbwarden.api.down": "[LNB Warden] L’API de LNB est injoignable : %s",
+  "chat.lnbwarden.api.up": "[LNB Warden] L’API de LNB est de nouveau joignable."
+}
