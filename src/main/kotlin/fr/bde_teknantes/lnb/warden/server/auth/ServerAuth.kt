@@ -6,6 +6,7 @@ import fr.bde_teknantes.lnb.warden.common.network.AuthResponsePayload
 import fr.bde_teknantes.lnb.warden.server.AuthMode
 import fr.bde_teknantes.lnb.warden.server.ServerConfig
 import fr.bde_teknantes.lnb.warden.server.api.WardenServerApi
+import fr.bde_teknantes.lnb.warden.server.session.SessionTracker
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
 import net.minecraft.server.network.ServerConfigurationPacketListenerImpl
@@ -72,6 +73,7 @@ object ServerAuth {
     fun onPlayerLoggedIn(event: PlayerEvent.PlayerLoggedInEvent) {
         val player = event.entity as? ServerPlayer ?: return
         val join = takePending(player.uuid) ?: return
+        join.sessionId?.let { SessionTracker.track(player.uuid, it) }
         greet(player, join)
     }
 

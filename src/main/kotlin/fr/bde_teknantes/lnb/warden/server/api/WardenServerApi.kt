@@ -29,12 +29,26 @@ object WardenServerApi {
 
     data class Player(val userId: String, val name: String)
 
+    data class HeartbeatBody(val sessionIds: List<String>)
+
+    /** Sessions the API has closed, such as after an outage longer than 3 minutes. */
+    data class HeartbeatResult(val unknown: List<String>)
+
+    data class EndSessionBody(val sessionId: String, val reason: String)
+
     fun login(body: LoginBody): CompletableFuture<ApiResult<LoginResult>> =
         call("login", "POST", "/api/warden/server/login", body)
 
     /** 404 `notLinked` when no LNB account has this Minecraft account. */
     fun player(uuid: UUID): CompletableFuture<ApiResult<Player>> =
         call("player lookup", "GET", "/api/warden/server/players/$uuid")
+
+    fun heartbeat(sessionIds: List<String>): CompletableFuture<ApiResult<HeartbeatResult>> =
+        call("heartbeat", "POST", "/api/warden/server/sessions/heartbeat", HeartbeatBody(sessionIds))
+
+    /** [reason] is `kicked` when the server disconnected the player, `quit` otherwise. */
+    fun endSession(sessionId: String, reason: String): CompletableFuture<ApiResult<Unit>> =
+        call("session end", "POST", "/api/warden/server/sessions/end", EndSessionBody(sessionId, reason))
 
     private inline fun <reified T> call(
         what: String,

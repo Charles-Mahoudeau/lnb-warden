@@ -2,6 +2,18 @@
   "commands.lnbwarden.status": "LNB Warden %s, API: %s",
   "commands.lnbwarden.status.api.configured": "configured",
   "commands.lnbwarden.status.api.missing": "not configured",
+  "commands.lnbwarden.status.mode": "Auth mode: %s",
+  "commands.lnbwarden.status.api_health": "API: last success %s, last error %s",
+  "commands.lnbwarden.status.api_error": "%s (%s)",
+  "commands.lnbwarden.status.events.connected": "Event stream: connected since %s",
+  "commands.lnbwarden.status.events.disconnected": "Event stream: disconnected since %s (%s)",
+  "commands.lnbwarden.status.heartbeat": "Heartbeat: %s, tracked sessions: %s",
+  "commands.lnbwarden.status.heartbeat.ok": "OK at %s",
+  "commands.lnbwarden.status.heartbeat.error": "failed at %s (%s)",
+  "commands.lnbwarden.status.never": "never",
+  "commands.lnbwarden.status.none": "none",
+
+  "commands.lnbwarden.auth.mode.set": "Auth mode set to %s. It applies to the next player who joins.",
 
   "lnbwarden.configuration.title": "LNB Warden Configs",
   "lnbwarden.configuration.section.lnbwarden.client.toml": "Client Configs",

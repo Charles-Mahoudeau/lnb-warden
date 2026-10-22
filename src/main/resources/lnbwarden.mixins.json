@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "fr.bde_teknantes.lnb.warden.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "ServerCommonPacketListenerImplMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

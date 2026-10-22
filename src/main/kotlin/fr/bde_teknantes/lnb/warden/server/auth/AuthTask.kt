@@ -10,6 +10,7 @@ import fr.bde_teknantes.lnb.warden.common.network.AuthChallengePayload
 import fr.bde_teknantes.lnb.warden.common.network.AuthResponsePayload
 import fr.bde_teknantes.lnb.warden.server.AuthMode
 import fr.bde_teknantes.lnb.warden.server.api.WardenServerApi
+import fr.bde_teknantes.lnb.warden.server.api.disconnectReason
 import net.minecraft.Util
 import net.minecraft.network.chat.Component
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
@@ -17,9 +18,6 @@ import net.minecraft.server.MinecraftServer
 import net.minecraft.server.network.ConfigurationTask
 import net.minecraft.server.network.ServerConfigurationPacketListenerImpl
 import net.neoforged.neoforge.network.configuration.ICustomConfigurationTask
-import java.time.Instant
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.function.Consumer
 
 /**
@@ -127,10 +125,7 @@ class AuthTask(
         LnbWarden.LOGGER.info("LNB denied {}: {}", profile.name, login.reason)
         refuse(
             when (login.reason) {
-                "banned" -> DisconnectReasons.banned(
-                    login.ban?.reason ?: "?",
-                    login.ban?.expiresAt?.let(::formatDate),
-                )
+                "banned" -> login.ban.disconnectReason()
                 "linkedElsewhere" -> DisconnectReasons.linkedElsewhere(profile.name)
                 "accountLimitReached" -> DisconnectReasons.accountLimitReached(login.limit?.max ?: 0)
                 "notLinked" -> DisconnectReasons.notLinked(profile.name)
@@ -199,9 +194,5 @@ class AuthTask(
 
         /** The confirmation screen can take a while. */
         private const val TIMEOUT_MS = 2 * 60 * 1000L
-
-        private val DATE = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm z").withZone(ZoneId.systemDefault())
-
-        private fun formatDate(iso: String): String = runCatching { DATE.format(Instant.parse(iso)) }.getOrDefault(iso)
     }
 }

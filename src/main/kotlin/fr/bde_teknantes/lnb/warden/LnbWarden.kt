@@ -3,7 +3,10 @@ package fr.bde_teknantes.lnb.warden
 import com.mojang.logging.LogUtils
 import fr.bde_teknantes.lnb.warden.common.network.WardenNetwork
 import fr.bde_teknantes.lnb.warden.server.ServerConfig
+import fr.bde_teknantes.lnb.warden.server.WardenServer
 import fr.bde_teknantes.lnb.warden.server.auth.ServerAuth
+import fr.bde_teknantes.lnb.warden.server.events.EventStream
+import fr.bde_teknantes.lnb.warden.server.session.SessionTracker
 import fr.bde_teknantes.lnb.warden.server.command.WardenCommand
 import net.minecraft.resources.ResourceLocation
 import net.neoforged.bus.api.IEventBus
@@ -32,6 +35,11 @@ class LnbWarden(modBus: IEventBus, container: ModContainer) {
         NeoForge.EVENT_BUS.addListener(WardenCommand::register)
         NeoForge.EVENT_BUS.addListener(ServerAuth::onServerTick)
         NeoForge.EVENT_BUS.addListener(ServerAuth::onPlayerLoggedIn)
+        NeoForge.EVENT_BUS.addListener(SessionTracker::onPlayerLoggedOut)
+        NeoForge.EVENT_BUS.addListener(SessionTracker::onServerTick)
+        NeoForge.EVENT_BUS.addListener(EventStream::onServerTick)
+        NeoForge.EVENT_BUS.addListener(WardenServer::onStarted)
+        NeoForge.EVENT_BUS.addListener(WardenServer::onStopping)
     }
 
     companion object {
