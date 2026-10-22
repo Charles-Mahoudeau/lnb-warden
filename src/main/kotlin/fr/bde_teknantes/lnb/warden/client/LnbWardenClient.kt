@@ -8,7 +8,6 @@ import net.neoforged.fml.common.Mod
 import net.neoforged.fml.config.ModConfig
 import net.neoforged.neoforge.client.gui.ConfigurationScreen
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory
-import net.neoforged.neoforge.common.NeoForge
 
 /**
  * Client entrypoint. This class is never loaded on a dedicated server,
@@ -23,8 +22,5 @@ class LnbWardenClient(modBus: IEventBus, container: ModContainer) {
             IConfigScreenFactory::class.java,
             IConfigScreenFactory { mod, parent -> ConfigurationScreen(mod, parent) },
         )
-
-        modBus.addListener(WardenKeyMappings::register)
-        NeoForge.EVENT_BUS.addListener(WardenKeyMappings::onClientTick)
     }
 }

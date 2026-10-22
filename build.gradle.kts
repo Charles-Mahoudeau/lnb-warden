@@ -114,6 +114,9 @@ neoForge {
         }
     }
 
+    // Puts Minecraft and its libraries (Gson, logging...) on the unit test classpath.
+    addModdingDependenciesTo(sourceSets.test.get())
+
     mods {
         // define mod <-> source bindings
         // these are used to tell the game which sources are for which mod
@@ -137,6 +140,11 @@ dependencies {
     // Kotlin language provider + Kotlin stdlib, reflect, coroutines and serialization.
     // Must use the '-neoforge' artifact on NeoForge.
     implementation("thedarkcolour:kotlinforforge-neoforge:${prop("kff_version")}")
+
+    testImplementation(kotlin("test"))
+    testImplementation(platform("org.junit:junit-bom:5.11.4"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
@@ -185,6 +193,12 @@ publishing {
     repositories {
         maven("file://${project.projectDir}/repo")
     }
+}
+
+tasks.test {
+    useJUnitPlatform()
+    // Minecraft's logging writes a logs/ directory into the working directory.
+    workingDir = layout.buildDirectory.dir("test-run").get().asFile.apply { mkdirs() }
 }
 
 tasks.withType<JavaCompile>().configureEach {
