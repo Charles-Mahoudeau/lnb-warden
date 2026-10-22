@@ -1,5 +1,6 @@
 package fr.bde_teknantes.lnb.warden.server
 
+import com.electronwill.nightconfig.core.EnumGetMethod
 import net.neoforged.neoforge.common.ModConfigSpec
 
 /**
@@ -20,6 +21,18 @@ object ServerConfig {
     val API_TOKEN: ModConfigSpec.ConfigValue<String> = BUILDER
         .comment("Secret token used to authenticate with LNB's API. Do not share this file.")
         .define("token", "")
+
+    /** Read when each connection starts, so an edit applies to the next player who joins. */
+    val AUTH_MODE: ModConfigSpec.EnumValue<AuthMode> = BUILDER
+        .pop()
+        .comment("How players are authenticated with LNB Warden.")
+        .push("auth")
+        .comment(
+            "required: every player must be allowed by LNB's API.",
+            "optional: players without the mod or a link join as guests, unless their username is linked to an LNB account.",
+            "off: no authentication and no API calls, for development and private test servers.",
+        )
+        .defineEnum("mode", AuthMode.REQUIRED, EnumGetMethod.NAME_IGNORECASE)
 
     val SPEC: ModConfigSpec = BUILDER.pop().build()
 

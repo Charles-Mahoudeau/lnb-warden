@@ -3,6 +3,7 @@ package fr.bde_teknantes.lnb.warden
 import com.mojang.logging.LogUtils
 import fr.bde_teknantes.lnb.warden.common.network.WardenNetwork
 import fr.bde_teknantes.lnb.warden.server.ServerConfig
+import fr.bde_teknantes.lnb.warden.server.auth.ServerAuth
 import fr.bde_teknantes.lnb.warden.server.command.WardenCommand
 import net.minecraft.resources.ResourceLocation
 import net.neoforged.bus.api.IEventBus
@@ -27,7 +28,10 @@ class LnbWarden(modBus: IEventBus, container: ModContainer) {
         container.registerConfig(ModConfig.Type.COMMON, ServerConfig.SPEC, "$ID-server.toml")
 
         modBus.addListener(WardenNetwork::register)
+        modBus.addListener(ServerAuth::registerTasks)
         NeoForge.EVENT_BUS.addListener(WardenCommand::register)
+        NeoForge.EVENT_BUS.addListener(ServerAuth::onServerTick)
+        NeoForge.EVENT_BUS.addListener(ServerAuth::onPlayerLoggedIn)
     }
 
     companion object {

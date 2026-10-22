@@ -66,5 +66,61 @@
   "screen.lnbwarden.account.last_seen": "Last seen %s",
   "screen.lnbwarden.account.played": "%s played",
   "screen.lnbwarden.account.hours": "%s h %s min",
-  "screen.lnbwarden.account.minutes": "%s min"
+  "screen.lnbwarden.account.minutes": "%s min",
+
+  "disconnect.lnbwarden.no_token": "Link the mod to your LNB account from the main menu.",
+
+  "disconnect.lnbwarden.token_rejected": "Your LNB link expired or was revoked. Link the mod again from the main menu.",
+
+  "disconnect.lnbwarden.client_api_unreachable": "LNB's API couldn't be reached from your computer. Try again in a moment.",
+
+  "disconnect.lnbwarden.untrusted_server": "LNB Warden didn't recognise this server's address. Join with the Multiplayer button of the main menu.",
+
+  "disconnect.lnbwarden.link_declined": "You need to link this Minecraft account to play here.",
+
+  "disconnect.lnbwarden.no_mod": "This server requires the LNB Warden mod.",
+
+  "disconnect.lnbwarden.timed_out": "LNB Warden didn't answer in time. Try again.",
+
+  "disconnect.lnbwarden.api_unreachable": "LNB's API is unreachable, try again in a moment.",
+
+  "disconnect.lnbwarden.banned_permanent": "You are permanently banned from LNB's server.\nReason: %s",
+
+  "disconnect.lnbwarden.banned": "You are banned from LNB's server until %s.\nReason: %s",
+
+  "disconnect.lnbwarden.linked_elsewhere": "The Minecraft account %s belongs to another LNB account.",
+
+  "disconnect.lnbwarden.account_limit_reached": "You have reached your limit of %s Minecraft accounts. Unlink one on LNB's website to play with this one.",
+
+  "disconnect.lnbwarden.not_linked": "The Minecraft account %s isn't linked to your LNB account. Join again to link it.",
+
+  "disconnect.lnbwarden.school_not_allowed": "Players from your school can't play on LNB's server.",
+
+  "disconnect.lnbwarden.invalid_ticket": "Authentication failed, try again.",
+
+  "disconnect.lnbwarden.unlinked": "This Minecraft account was unlinked from your LNB account.",
+
+  "disconnect.lnbwarden.device_revoked": "This computer was signed out of your LNB account. Link the mod again from the main menu.",
+
+  "screen.lnbwarden.confirm.title": "Link this Minecraft account?",
+  "screen.lnbwarden.confirm.question": "Link the Minecraft account %s to your LNB account (%s)?",
+  "screen.lnbwarden.confirm.used": "%s of %s accounts used.",
+  "screen.lnbwarden.confirm.full": "You already use %s of %s accounts, so %s can't be linked. Unlink an account on LNB's website first.",
+  "screen.lnbwarden.confirm.link": "Link",
+
+  "chat.lnbwarden.guest": "You are playing as a guest: %s",
+  "chat.lnbwarden.guest.no_mod": "you don't have the LNB Warden mod.",
+  "chat.lnbwarden.guest.no_answer": "LNB Warden didn't answer in time.",
+  "chat.lnbwarden.guest.not_linked": "your mod isn't linked to an LNB account.",
+  "chat.lnbwarden.guest.client_api_unreachable": "LNB's API couldn't be reached from your computer.",
+  "chat.lnbwarden.guest.untrusted_server": "LNB Warden didn't recognise this server's address.",
+  "chat.lnbwarden.guest.link_declined": "you didn't link this Minecraft account.",
+  "chat.lnbwarden.guest.api_unreachable": "LNB's API is unreachable.",
+
+  "chat.lnbwarden.linked": "%s is now linked to your LNB account.",
+
+  "chat.lnbwarden.warning": "Warning from LNB's staff: %s",
+
+  "chat.lnbwarden.api.down": "[LNB Warden] LNB's API is unreachable: %s",
+  "chat.lnbwarden.api.up": "[LNB Warden] LNB's API is reachable again."
 }
