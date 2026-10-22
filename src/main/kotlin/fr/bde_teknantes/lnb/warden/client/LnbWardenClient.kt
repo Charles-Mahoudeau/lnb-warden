@@ -42,6 +42,7 @@ class LnbWardenClient(modBus: IEventBus, container: ModContainer) {
         }
         NeoForge.EVENT_BUS.addListener(Presence::onLoggingIn)
         NeoForge.EVENT_BUS.addListener(Presence::onLoggingOut)
+        NeoForge.EVENT_BUS.addListener(ClientRealNames::onLoggingOut)
         NeoForge.EVENT_BUS.addListener<GameShuttingDownEvent> { Presence.onShutdown() }
     }
 }

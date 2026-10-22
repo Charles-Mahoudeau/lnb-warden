@@ -16,12 +16,16 @@ object WardenServerApi {
     data class Ban(val reason: String, val expiresAt: String?)
     data class Limit(val used: Int, val max: Int)
 
-    /** `allowed` sets [sessionId], [linked] and [warnings]; `denied` sets [reason], and [ban] or [limit]. */
+    /**
+     * `allowed` sets [sessionId], [linked] and [warnings], and [shortName] when the player shows their real name;
+     * `denied` sets [reason], and [ban] or [limit].
+     */
     data class LoginResult(
         val result: String,
         val sessionId: String?,
         val linked: Boolean?,
         val warnings: List<Warning>?,
+        val shortName: String?,
         val reason: String?,
         val ban: Ban?,
         val limit: Limit?,

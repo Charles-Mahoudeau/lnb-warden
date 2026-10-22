@@ -6,6 +6,10 @@
   "mixins": [
     "ServerCommonPacketListenerImplMixin"
   ],
+  "client": [
+    "client.PlayerRendererMixin",
+    "client.PlayerTabOverlayMixin"
+  ],
   "injectors": {
     "defaultRequire": 1
   }

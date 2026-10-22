@@ -36,6 +36,8 @@ object SessionTracker {
         sessions[uuid] = sessionId
     }
 
+    fun hasSession(uuid: UUID): Boolean = sessions.containsKey(uuid)
+
     /** Called by a mixin when the server disconnects a player in game, so their session ends as `kicked`. */
     @JvmStatic
     fun markKicked(uuid: UUID) {

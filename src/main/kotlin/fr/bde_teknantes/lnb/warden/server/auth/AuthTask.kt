@@ -116,6 +116,7 @@ class AuthTask(
                     sessionId = login.sessionId,
                     warnings = login.warnings.orEmpty(),
                     linked = login.linked == true,
+                    shortName = login.shortName,
                     guestReason = null,
                 )
             )
@@ -173,7 +174,7 @@ class AuthTask(
 
     private fun allowAsGuest(reason: Component) {
         LnbWarden.LOGGER.info("{} joins as a guest: {}", profile.name, reason.string)
-        allow(PendingJoin(sessionId = null, warnings = emptyList(), linked = false, guestReason = reason))
+        allow(PendingJoin(sessionId = null, warnings = emptyList(), linked = false, shortName = null, guestReason = reason))
     }
 
     private fun allow(pending: PendingJoin) {

@@ -167,7 +167,7 @@ sequenceDiagram
     C->>S: auth_response {ticket}
     S->>A: POST /api/warden/server/login<br/>{ticket, nonce, uuid, username}
     alt allowed
-        A-->>S: {sessionId, player, warnings, linked}
+        A-->>S: {sessionId, player, warnings, linked, shortName}
         S->>C: finish task, the player spawns
     else denied
         A-->>S: {reason, …}
@@ -177,12 +177,13 @@ sequenceDiagram
 
 ### Payloads
 
-Registered as configuration payloads in `WardenNetwork`. Bump `PROTOCOL_VERSION`.
+Registered in `WardenNetwork`. Bump `PROTOCOL_VERSION` whenever one changes.
 
-| Payload | Direction | Fields |
-| --- | --- | --- |
-| `lnbwarden:auth_challenge` | server → client | `nonce`: 32 bytes from `SecureRandom` |
-| `lnbwarden:auth_response` | client → server | either `ticket: String`, or `failure`: `NO_TOKEN`, `TOKEN_REJECTED`, `API_UNREACHABLE`, `UNTRUSTED_SERVER`, `LINK_DECLINED` |
+| Payload | Direction | Phase | Fields |
+| --- | --- | --- | --- |
+| `lnbwarden:auth_challenge` | server → client | configuration | `nonce`: 32 bytes from `SecureRandom` |
+| `lnbwarden:auth_response` | client → server | configuration | either `ticket: String`, or `failure`: `NO_TOKEN`, `TOKEN_REJECTED`, `API_UNREACHABLE`, `UNTRUSTED_SERVER`, `LINK_DECLINED` |
+| `lnbwarden:real_names` | server → client | play | `names`: UUID → real name, or none to remove it. See [Real names](#real-names). |
 
 The nonce goes to the API as base64url without padding.
 
@@ -212,7 +213,7 @@ With a ticket, call `POST /api/warden/server/login` with the connection's UUID a
 
 | Result                        | Server does                                                                                                                                                   |
 |-------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `allowed`                     | Finish the task. Keep `sessionId` for this player. After spawn, show `warnings` in chat, and "Steve is now linked to your LNB account" when `linked` is true. |
+| `allowed`                     | Finish the task. Keep `sessionId` and `shortName` for this player. After spawn, show `warnings` in chat, and "Steve is now linked to your LNB account" when `linked` is true. |
 | `denied: banned`              | Disconnect with the reason and the end date, or "permanent".                                                                                                  |
 | `denied: linkedElsewhere`     | Disconnect: this username belongs to another LNB account.                                                                                                     |
 | `denied: accountLimitReached` | Disconnect: limit reached, unlink an account on the website.                                                                                                  |
@@ -265,8 +266,26 @@ Guests get a chat message after spawn saying they play as a guest, and why ("not
   come from the event stream.
 - Keep `GET /api/warden/server/events` open:
   - `kick`: disconnect the listed UUIDs with the reason (`banned` with its ban, `unlinked`, `deviceRevoked`).
+  - `realName`: `{uuids, shortName}`, when a player renames themselves or changes whether to show their real name.
+    Update the online players among `uuids` that have a session. `shortName` is null when hidden.
   - `settings`: log the new settings.
   - Reconnect with `Last-Event-ID` and a backoff (1 s, doubling up to 30 s).
+
+### Real names
+
+Players who chose to show their real name on LNB (`showRealName`) have it under their name tag, in gray, and after their
+name in the tab list:
+
+```
+Charlito33
+Charles M.
+```
+
+- `login` returns `shortName` with `allowed`, only when the player shows it. Guests never have one.
+- The server keeps the real names of online players. When a player joins, it sends them every real name, and sends
+  everyone theirs. When they leave or hide it, it sends everyone a removal. Clients without the mod get nothing.
+- The client keeps them until it disconnects. A mixin on `PlayerRenderer.renderNameTag` draws the real name and moves
+  the name tag up a line, like a below-name score; another on `PlayerTabOverlay.getNameForDisplay` appends it.
 
 ### Commands
 

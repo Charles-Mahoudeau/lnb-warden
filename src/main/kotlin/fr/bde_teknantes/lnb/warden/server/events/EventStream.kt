@@ -9,6 +9,8 @@ import fr.bde_teknantes.lnb.warden.server.AuthMode
 import fr.bde_teknantes.lnb.warden.server.ServerConfig
 import fr.bde_teknantes.lnb.warden.server.api.WardenServerApi
 import fr.bde_teknantes.lnb.warden.server.api.disconnectReason
+import fr.bde_teknantes.lnb.warden.server.session.ServerRealNames
+import fr.bde_teknantes.lnb.warden.server.session.SessionTracker
 import net.minecraft.Util
 import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
@@ -22,7 +24,7 @@ import java.util.UUID
 
 /**
  * Keeps `GET /api/warden/server/events` open, on its own thread, to kick players banned, unlinked or signed out
- * on the website.
+ * on the website, and to follow changes to the real names players show.
  */
 object EventStream {
     sealed interface Status {
@@ -165,6 +167,7 @@ object EventStream {
 
         when (type) {
             "kick" -> kick(server, body)
+            "realName" -> realName(server, body)
             "settings" -> LnbWarden.LOGGER.info("LNB's Warden settings changed: {}", body)
             "unban" -> LnbWarden.LOGGER.info("LNB unbanned {}", body.get("uuids"))
             "ping" -> Unit
@@ -187,6 +190,18 @@ object EventStream {
                 val player = server.playerList.getPlayer(uuid) ?: continue
                 LnbWarden.LOGGER.info("LNB kicks {}: {}", player.gameProfile.name, reason)
                 player.connection.disconnect(message)
+            }
+        }
+    }
+
+    private fun realName(server: MinecraftServer, body: JsonObject) {
+        val uuids = body.getAsJsonArray("uuids")?.mapNotNull { runCatching { UUID.fromString(it.asString) }.getOrNull() }.orEmpty()
+        val shortName = body.get("shortName")?.takeIf { it.isJsonPrimitive }?.asString
+
+        server.execute {
+            // Guests never show a real name, even under a linked username.
+            for (uuid in uuids) {
+                if (SessionTracker.hasSession(uuid)) ServerRealNames.update(server, uuid, shortName)
             }
         }
     }

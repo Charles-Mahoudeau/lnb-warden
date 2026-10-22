@@ -6,6 +6,7 @@ import fr.bde_teknantes.lnb.warden.server.ServerConfig
 import fr.bde_teknantes.lnb.warden.server.WardenServer
 import fr.bde_teknantes.lnb.warden.server.auth.ServerAuth
 import fr.bde_teknantes.lnb.warden.server.events.EventStream
+import fr.bde_teknantes.lnb.warden.server.session.ServerRealNames
 import fr.bde_teknantes.lnb.warden.server.session.SessionTracker
 import fr.bde_teknantes.lnb.warden.server.command.WardenCommand
 import net.minecraft.resources.ResourceLocation
@@ -36,6 +37,7 @@ class LnbWarden(modBus: IEventBus, container: ModContainer) {
         NeoForge.EVENT_BUS.addListener(ServerAuth::onServerTick)
         NeoForge.EVENT_BUS.addListener(ServerAuth::onPlayerLoggedIn)
         NeoForge.EVENT_BUS.addListener(SessionTracker::onPlayerLoggedOut)
+        NeoForge.EVENT_BUS.addListener(ServerRealNames::onPlayerLoggedOut)
         NeoForge.EVENT_BUS.addListener(SessionTracker::onServerTick)
         NeoForge.EVENT_BUS.addListener(EventStream::onServerTick)
         NeoForge.EVENT_BUS.addListener(WardenServer::onStarted)

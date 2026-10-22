@@ -6,6 +6,7 @@ import fr.bde_teknantes.lnb.warden.common.network.AuthResponsePayload
 import fr.bde_teknantes.lnb.warden.server.AuthMode
 import fr.bde_teknantes.lnb.warden.server.ServerConfig
 import fr.bde_teknantes.lnb.warden.server.api.WardenServerApi
+import fr.bde_teknantes.lnb.warden.server.session.ServerRealNames
 import fr.bde_teknantes.lnb.warden.server.session.SessionTracker
 import net.minecraft.ChatFormatting
 import net.minecraft.network.chat.Component
@@ -25,6 +26,8 @@ data class PendingJoin(
     val warnings: List<WardenServerApi.Warning>,
     /** Whether this login just linked the Minecraft account. */
     val linked: Boolean,
+    /** The player's real name, when they show it on LNB. */
+    val shortName: String?,
     /** Why the player plays as a guest, or null when they are authenticated. */
     val guestReason: Component?,
 )
@@ -72,7 +75,9 @@ object ServerAuth {
 
     fun onPlayerLoggedIn(event: PlayerEvent.PlayerLoggedInEvent) {
         val player = event.entity as? ServerPlayer ?: return
-        val join = takePending(player.uuid) ?: return
+        val join = takePending(player.uuid)
+        ServerRealNames.onJoin(player, join?.shortName)
+        if (join == null) return
         join.sessionId?.let { SessionTracker.track(player.uuid, it) }
         greet(player, join)
     }
