@@ -16,8 +16,11 @@ object WardenServerApi {
     data class Ban(val reason: String, val expiresAt: String?)
     data class Limit(val used: Int, val max: Int)
 
+    /** The LNB user behind an `allowed` login. [displayName] is their real name, as they chose to show it. */
+    data class LoginPlayer(val userId: String, val displayName: String?)
+
     /**
-     * `allowed` sets [sessionId], [linked] and [warnings], and [shortName] when the player shows their real name;
+     * `allowed` sets [sessionId], [linked] and [warnings], and [player] for LNB users;
      * `denied` sets [reason], and [ban] or [limit].
      */
     data class LoginResult(
@@ -25,11 +28,14 @@ object WardenServerApi {
         val sessionId: String?,
         val linked: Boolean?,
         val warnings: List<Warning>?,
-        val shortName: String?,
+        val player: LoginPlayer?,
         val reason: String?,
         val ban: Ban?,
         val limit: Limit?,
-    )
+    ) {
+        /** The player's real name, null for guests. */
+        val shortName: String? get() = player?.displayName
+    }
 
     data class Player(val userId: String, val name: String)
 

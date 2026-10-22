@@ -281,7 +281,7 @@ Charlito33
 Charles M.
 ```
 
-- `login` returns `shortName` with `allowed`, only when the player shows it. Guests never have one.
+- `login` returns the real name as `player.displayName` with `allowed`. Guests never have one.
 - The server keeps the real names of online players. When a player joins, it sends them every real name, and sends
   everyone theirs. When they leave or hide it, it sends everyone a removal. Clients without the mod get nothing.
 - The client keeps them until it disconnects. A mixin on `PlayerRenderer.renderNameTag` draws the real name and moves
