@@ -1,0 +1,20 @@
+{
+  "key.categories.lnbwarden": "LNB Warden",
+  "key.lnbwarden.ping": "Ping LNB server",
+
+  "message.lnbwarden.pong": "Pong from LNB server (%s ms)",
+
+  "commands.lnbwarden.status": "LNB Warden %s, API: %s",
+  "commands.lnbwarden.status.api.configured": "configured",
+  "commands.lnbwarden.status.api.missing": "not configured",
+
+  "lnbwarden.configuration.title": "LNB Warden Configs",
+  "lnbwarden.configuration.section.lnbwarden.client.toml": "Client Configs",
+  "lnbwarden.configuration.section.lnbwarden.client.toml.title": "LNB Warden Client Configs",
+  "lnbwarden.configuration.section.lnbwarden.server.toml": "Server Configs",
+  "lnbwarden.configuration.section.lnbwarden.server.toml.title": "LNB Warden Server Configs",
+  "lnbwarden.configuration.pongInActionBar": "Show Pong in Action Bar",
+  "lnbwarden.configuration.api": "API",
+  "lnbwarden.configuration.url": "API URL",
+  "lnbwarden.configuration.token": "API Token"
+}
