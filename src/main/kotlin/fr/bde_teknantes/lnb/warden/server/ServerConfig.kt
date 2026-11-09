@@ -16,7 +16,7 @@ object ServerConfig {
 
     val API_URL: ModConfigSpec.ConfigValue<String> = BUILDER
         .comment("Base URL of LNB's API.")
-        .define("url", "")
+        .define("url", "https://lnb.bde-teknantes.fr")
 
     val API_TOKEN: ModConfigSpec.ConfigValue<String> = BUILDER
         .comment("Secret token used to authenticate with LNB's API. Do not share this file.")
@@ -33,6 +33,13 @@ object ServerConfig {
             "off: no authentication and no API calls, for development and private test servers.",
         )
         .defineEnum("mode", AuthMode.REQUIRED, EnumGetMethod.NAME_IGNORECASE)
+
+    val SERVER_IP: ModConfigSpec.ConfigValue<String> = BUILDER
+        .pop()
+        .comment("This Minecraft server.")
+        .push("server")
+        .comment("Public IP or hostname of this server, as players connect to it.")
+        .define("ip", "mc.lnb.bde-teknantes.fr")
 
     val SPEC: ModConfigSpec = BUILDER.pop().build()
 
