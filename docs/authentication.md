@@ -35,7 +35,7 @@ Added to `ClientConfig` (`config/lnbwarden-client.toml`, also editable from the 
 | Key             | Default                        | Use                                                                                   |
 |-----------------|--------------------------------|---------------------------------------------------------------------------------------|
 | `apiUrl`        | `https://lnb.bde-teknantes.fr` | Base URL of LNB's API.                                                                |
-| `serverAddress` | `mc.bde-teknantes.fr`          | Where the Multiplayer button connects, and the only host the client sends tickets to. |
+| `serverAddress` | `mc.lnb.bde-teknantes.fr`      | Where the Multiplayer button connects, and the only host the client sends tickets to. |
 
 ### Device token storage
 

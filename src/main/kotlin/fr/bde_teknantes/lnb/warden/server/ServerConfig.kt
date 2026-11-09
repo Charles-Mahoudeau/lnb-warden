@@ -34,13 +34,6 @@ object ServerConfig {
         )
         .defineEnum("mode", AuthMode.REQUIRED, EnumGetMethod.NAME_IGNORECASE)
 
-    val SERVER_IP: ModConfigSpec.ConfigValue<String> = BUILDER
-        .pop()
-        .comment("This Minecraft server.")
-        .push("server")
-        .comment("Public IP or hostname of this server, as players connect to it.")
-        .define("ip", "mc.lnb.bde-teknantes.fr")
-
     val SPEC: ModConfigSpec = BUILDER.pop().build()
 
     val isApiConfigured: Boolean

@@ -15,7 +15,7 @@ object ClientConfig {
             "Where the Multiplayer button connects.",
             "Also the only server LNB Warden authenticates you on.",
         )
-        .define("serverAddress", "mc.bde-teknantes.fr")
+        .define("serverAddress", "mc.lnb.bde-teknantes.fr")
 
     val SPEC: ModConfigSpec = BUILDER.build()
 
