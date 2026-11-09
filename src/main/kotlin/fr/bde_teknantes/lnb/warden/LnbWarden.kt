@@ -42,6 +42,11 @@ class LnbWarden(modBus: IEventBus, container: ModContainer) {
         NeoForge.EVENT_BUS.addListener(EventStream::onServerTick)
         NeoForge.EVENT_BUS.addListener(WardenServer::onStarted)
         NeoForge.EVENT_BUS.addListener(WardenServer::onStopping)
+
+        // The kick mixin calls SessionTracker. Mixin resolves that class with the thread's context class loader,
+        // which on a Netty IO thread can't see mod classes: if this class were first loaded by the first login,
+        // the login would die with a MixinTransformerError. Load it here, on a thread that can.
+        Class.forName("net.minecraft.server.network.ServerCommonPacketListenerImpl")
     }
 
     companion object {
