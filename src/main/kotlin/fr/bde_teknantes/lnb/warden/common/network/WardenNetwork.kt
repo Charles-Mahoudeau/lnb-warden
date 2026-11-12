@@ -9,7 +9,7 @@ import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent
  * Bump [PROTOCOL_VERSION] whenever a payload changes, so mismatched client/server versions refuse to connect.
  */
 object WardenNetwork {
-    private const val PROTOCOL_VERSION = "3"
+    private const val PROTOCOL_VERSION = "4"
 
     fun register(event: RegisterPayloadHandlersEvent) {
         // Optional, so clients without the mod can still connect: the auth task decides what to do with them
@@ -29,5 +29,19 @@ object WardenNetwork {
         registrar.playToClient(RealNamesPayload.TYPE, RealNamesPayload.STREAM_CODEC) { payload, context ->
             ClientPayloadHandler.handleRealNames(payload, context)
         }
+
+        // File verification: asked during configuration, and again in game.
+        registrar.commonToClient(FilesRequestPayload.TYPE, FilesRequestPayload.STREAM_CODEC) { payload, context ->
+            ClientPayloadHandler.handleFilesRequest(payload, context)
+        }
+        registrar.commonToServer(FilesReportPayload.TYPE, FilesReportPayload.STREAM_CODEC, ServerPayloadHandler::handleFilesReport)
+        registrar.playToClient(FilesChallengePayload.TYPE, FilesChallengePayload.STREAM_CODEC) { payload, context ->
+            ClientPayloadHandler.handleFilesChallenge(payload, context)
+        }
+        registrar.playToServer(
+            FilesChallengeResponsePayload.TYPE,
+            FilesChallengeResponsePayload.STREAM_CODEC,
+            ServerPayloadHandler::handleFilesChallengeResponse,
+        )
     }
 }

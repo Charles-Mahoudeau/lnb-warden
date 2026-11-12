@@ -6,6 +6,7 @@ import com.mojang.brigadier.context.CommandContext
 import fr.bde_teknantes.lnb.warden.LnbWarden
 import fr.bde_teknantes.lnb.warden.server.AuthMode
 import fr.bde_teknantes.lnb.warden.server.ServerConfig
+import fr.bde_teknantes.lnb.warden.server.anticheat.ServerAnticheat
 import fr.bde_teknantes.lnb.warden.server.api.ApiHealth
 import fr.bde_teknantes.lnb.warden.server.events.EventStream
 import fr.bde_teknantes.lnb.warden.server.session.SessionTracker
@@ -81,6 +82,12 @@ object WardenCommand {
             { Component.translatable("commands.lnbwarden.status.heartbeat", heartbeatState, SessionTracker.count) },
             false,
         )
+        val anticheat = if (ServerConfig.ANTICHEAT_ENABLED.get()) {
+            Component.translatable("commands.lnbwarden.status.anticheat.on", ServerAnticheat.count)
+        } else {
+            Component.translatable("commands.lnbwarden.status.anticheat.off")
+        }
+        source.sendSuccess({ anticheat }, false)
         return Command.SINGLE_SUCCESS
     }
 

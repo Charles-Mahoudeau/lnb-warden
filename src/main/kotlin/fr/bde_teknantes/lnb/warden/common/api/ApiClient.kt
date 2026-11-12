@@ -1,6 +1,7 @@
 package fr.bde_teknantes.lnb.warden.common.api
 
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import java.net.URI
@@ -19,6 +20,10 @@ sealed interface ApiResult<out T> {
 
     /** The request didn't get an answer: DNS, connection refused, timeout, malformed body... */
     data class Network(val cause: Throwable) : ApiResult<Nothing>
+
+    /** LNB turned the feature behind this route off. */
+    val isDisabled: Boolean
+        get() = this is Http && status == 503 && problem == "disabled"
 
     /** No answer, or an answer from a broken API. Both mean "try again later". */
     val isUnreachable: Boolean
@@ -42,6 +47,11 @@ class InsecureApiUrlException(url: String) :
  */
 object ApiClient {
     val GSON = Gson()
+
+    /** A request body whose null fields are sent as `null`, for the fields the API wants present. */
+    interface WithNulls
+
+    private val GSON_WITH_NULLS = GsonBuilder().serializeNulls().create()
 
     val HTTP: HttpClient = HttpClient.newBuilder()
         .connectTimeout(Duration.ofSeconds(10))
@@ -95,7 +105,7 @@ object ApiClient {
 
         val request = try {
             val publisher = if (body == null) HttpRequest.BodyPublishers.noBody()
-            else HttpRequest.BodyPublishers.ofString(GSON.toJson(body))
+            else HttpRequest.BodyPublishers.ofString((if (body is WithNulls) GSON_WITH_NULLS else GSON).toJson(body))
             request(baseUrl, path, token)
                 .timeout(timeout)
                 .apply { if (body != null) header("Content-Type", "application/json") }

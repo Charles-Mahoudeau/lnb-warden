@@ -5,6 +5,7 @@ import fr.bde_teknantes.lnb.warden.LnbWarden
 import fr.bde_teknantes.lnb.warden.common.network.AuthResponsePayload
 import fr.bde_teknantes.lnb.warden.server.AuthMode
 import fr.bde_teknantes.lnb.warden.server.ServerConfig
+import fr.bde_teknantes.lnb.warden.server.anticheat.ServerAnticheat
 import fr.bde_teknantes.lnb.warden.server.api.WardenServerApi
 import fr.bde_teknantes.lnb.warden.server.session.ServerRealNames
 import fr.bde_teknantes.lnb.warden.server.session.SessionTracker
@@ -48,6 +49,7 @@ object ServerAuth {
         val task = AuthTask(listener, server, mode)
         tasks[listener] = task
         event.register(task)
+        ServerAnticheat.registerTask(event, listener, server)
     }
 
     fun onResponse(listener: Any, response: AuthResponsePayload) {
@@ -69,6 +71,9 @@ object ServerAuth {
         tasks.entries.removeIf { (listener, _) -> listener.owner.id == profile.id }
         pending[profile.id] = join
     }
+
+    /** The LNB session [AuthTask] opened for [uuid], while they haven't spawned yet. Null for guests. */
+    fun sessionOf(uuid: UUID): String? = pending[uuid]?.sessionId
 
     /** Takes what [AuthTask] learnt about [uuid], once. */
     fun takePending(uuid: UUID): PendingJoin? = pending.remove(uuid)

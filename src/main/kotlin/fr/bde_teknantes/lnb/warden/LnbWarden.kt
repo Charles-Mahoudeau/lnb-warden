@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils
 import fr.bde_teknantes.lnb.warden.common.network.WardenNetwork
 import fr.bde_teknantes.lnb.warden.server.ServerConfig
 import fr.bde_teknantes.lnb.warden.server.WardenServer
+import fr.bde_teknantes.lnb.warden.server.anticheat.ServerAnticheat
 import fr.bde_teknantes.lnb.warden.server.auth.ServerAuth
 import fr.bde_teknantes.lnb.warden.server.events.EventStream
 import fr.bde_teknantes.lnb.warden.server.session.ServerRealNames
@@ -39,6 +40,9 @@ class LnbWarden(modBus: IEventBus, container: ModContainer) {
         NeoForge.EVENT_BUS.addListener(SessionTracker::onPlayerLoggedOut)
         NeoForge.EVENT_BUS.addListener(ServerRealNames::onPlayerLoggedOut)
         NeoForge.EVENT_BUS.addListener(SessionTracker::onServerTick)
+        NeoForge.EVENT_BUS.addListener(ServerAnticheat::onServerTick)
+        NeoForge.EVENT_BUS.addListener(ServerAnticheat::onPlayerLoggedIn)
+        NeoForge.EVENT_BUS.addListener(ServerAnticheat::onPlayerLoggedOut)
         NeoForge.EVENT_BUS.addListener(EventStream::onServerTick)
         NeoForge.EVENT_BUS.addListener(WardenServer::onStarted)
         NeoForge.EVENT_BUS.addListener(WardenServer::onStopping)

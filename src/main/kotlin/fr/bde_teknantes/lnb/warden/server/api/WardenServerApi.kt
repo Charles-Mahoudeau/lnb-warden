@@ -46,6 +46,57 @@ object WardenServerApi {
 
     data class EndSessionBody(val sessionId: String, val reason: String)
 
+    data class BanBody(val reason: String, val durationSeconds: Long?) : ApiClient.WithNulls
+
+    data class AnticheatFacts(val coreShaders: Boolean, val alteredTextures: Boolean)
+
+    /** A file as the API takes it. Null fields are left out of the request. */
+    data class AnticheatFile(
+        val kind: String,
+        val sha512: String,
+        val fingerprint: Long?,
+        val filename: String,
+        val modId: String?,
+        val name: String?,
+        val version: String?,
+        val loader: String?,
+        val facts: AnticheatFacts?,
+    )
+
+    data class AnticheatReportBody(val sessionId: String, val files: List<AnticheatFile>)
+
+    /** [sha512] and [name] are set when the reason is about a file. */
+    data class VerdictReason(val code: String, val sha512: String?, val name: String?, val action: String)
+
+    /**
+     * What to do with the player: `allow`, `flag`, `warn`, `hold`, `refuse`, `kick` or `ban`, from least to most
+     * severe. While LNB only observes, [action] is `allow` and [wouldBe] is what it would have been.
+     */
+    data class Verdict(val action: String, val wouldBe: String?, val reasons: List<VerdictReason>?)
+
+    data class PlayerTrust(val score: Int, val band: String)
+
+    /** [reportId] is null when LNB's anticheat is off: nothing was stored. [pending] files are still being looked up. */
+    data class AnticheatReport(
+        val reportId: String?,
+        val mode: String?,
+        val verdict: Verdict?,
+        val player: PlayerTrust?,
+        val pending: Int,
+    )
+
+    data class AnticheatEvent(val id: String, val kind: String, val data: Map<String, Any>)
+    data class AnticheatEventsBody(val sessionId: String, val events: List<AnticheatEvent>)
+    data class AnticheatEvents(val player: PlayerTrust?, val verdict: Verdict?)
+
+    data class AnticheatActionBody(
+        val sessionId: String,
+        val reportId: String?,
+        val action: String,
+        val reason: String,
+        val sha512: String?,
+    ) : ApiClient.WithNulls
+
     fun login(body: LoginBody): CompletableFuture<ApiResult<LoginResult>> =
         call("login", "POST", "/api/warden/server/login", body)
 
@@ -60,6 +111,26 @@ object WardenServerApi {
     fun endSession(sessionId: String, reason: String): CompletableFuture<ApiResult<Unit>> =
         call("session end", "POST", "/api/warden/server/sessions/end", EndSessionBody(sessionId, reason))
 
+    /** A permanent ban of the LNB account behind [uuid], when [durationSeconds] is null. */
+    fun ban(uuid: UUID, reason: String, durationSeconds: Long? = null): CompletableFuture<ApiResult<Unit>> =
+        call("ban", "POST", "/api/warden/server/players/$uuid/bans", BanBody(reason, durationSeconds))
+
+    /** The files a player's client loaded. The answer says what to do with the player. */
+    fun anticheatReport(body: AnticheatReportBody): CompletableFuture<ApiResult<AnticheatReport>> =
+        call("anticheat report", "POST", "/api/warden/server/anticheat/reports", body)
+
+    /** Things that cost the player trust. [AnticheatEvent.id] makes the call safe to repeat. */
+    fun anticheatEvents(body: AnticheatEventsBody): CompletableFuture<ApiResult<AnticheatEvents>> =
+        call("anticheat event", "POST", "/api/warden/server/anticheat/events", body)
+
+    /** Tells LNB what the server did to a player. */
+    fun anticheatAction(body: AnticheatActionBody): CompletableFuture<ApiResult<Unit>> =
+        call("anticheat action", "POST", "/api/warden/server/anticheat/actions", body)
+
+    /** The latest answer to the reports of a session. 404 `noReport` when it has none. */
+    fun anticheatSession(sessionId: String): CompletableFuture<ApiResult<AnticheatReport>> =
+        call("anticheat session", "GET", "/api/warden/server/anticheat/sessions/$sessionId")
+
     private inline fun <reified T> call(
         what: String,
         method: String,
@@ -73,6 +144,10 @@ object WardenServerApi {
         }
         // Plain HTTP is allowed here: the server's admin chose api.url, and is warned at startup.
         return ApiClient.send<T>(ServerConfig.API_URL.get(), method, path, ServerConfig.API_TOKEN.get(), body, requireSecure = false)
-            .thenApply { result -> result.also { ApiHealth.record(what, it) } }
+            .thenApply { result ->
+                // A feature LNB turned off answers 503: the API itself is fine.
+                if (!result.isDisabled) ApiHealth.record(what, result)
+                result
+            }
     }
 }

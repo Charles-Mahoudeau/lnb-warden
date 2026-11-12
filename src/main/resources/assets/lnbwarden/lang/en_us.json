@@ -25,6 +25,10 @@
   "lnbwarden.configuration.api": "API",
   "lnbwarden.configuration.url": "API URL",
   "lnbwarden.configuration.token": "API Token",
+  "lnbwarden.configuration.anticheat": "File Verification",
+  "lnbwarden.configuration.enabled": "Check Players' Files",
+  "lnbwarden.configuration.channelCheck": "Check Network Channels",
+  "lnbwarden.configuration.banReason": "Ban Reason",
 
   "screen.lnbwarden.link.title": "Link LNB Warden to your LNB account",
   "screen.lnbwarden.link.requesting": "Asking LNB for a code%s",
@@ -134,5 +138,16 @@
   "chat.lnbwarden.warning": "Warning from LNB's staff: %s",
 
   "chat.lnbwarden.api.down": "[LNB Warden] LNB's API is unreachable: %s",
-  "chat.lnbwarden.api.up": "[LNB Warden] LNB's API is reachable again."
+  "chat.lnbwarden.api.up": "[LNB Warden] LNB's API is reachable again.",
+
+  "commands.lnbwarden.status.anticheat.on": "File verification: on, %s player(s) checked",
+  "commands.lnbwarden.status.anticheat.off": "File verification: off",
+  "disconnect.lnbwarden.anticheat.timed_out": "LNB Warden didn't list your mods and packs in time. Try again.",
+  "disconnect.lnbwarden.anticheat.held": "LNB's staff has to review these files before you can play with them:\n%s\nRemove them to play now.",
+  "disconnect.lnbwarden.anticheat.account_held": "LNB's staff has to review your account before you can play. Contact them.",
+  "disconnect.lnbwarden.anticheat.refused": "These files aren't allowed on LNB's server:\n%s\nRemove them to play.",
+  "disconnect.lnbwarden.anticheat.banned": "These files are banned from LNB's server:\n%s",
+  "disconnect.lnbwarden.anticheat.untrusted": "LNB's anticheat no longer trusts your account. Contact LNB's staff.",
+  "chat.lnbwarden.anticheat.pack_warning": "LNB's staff will review these resource packs: %s. You may be asked to remove them.",
+  "chat.lnbwarden.anticheat.alert": "[LNB Warden] Anticheat alert: %s (%s). See LNB's website."
 }

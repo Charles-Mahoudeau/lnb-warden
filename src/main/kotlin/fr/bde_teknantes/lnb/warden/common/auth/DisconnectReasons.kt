@@ -31,6 +31,12 @@ object DisconnectReasons {
     const val INVALID_TICKET = PREFIX + "invalid_ticket"
     const val UNLINKED = PREFIX + "unlinked"
     const val DEVICE_REVOKED = PREFIX + "device_revoked"
+    const val FILES_TIMED_OUT = PREFIX + "anticheat.timed_out"
+    const val ANTICHEAT_HELD = PREFIX + "anticheat.held"
+    const val ANTICHEAT_ACCOUNT_HELD = PREFIX + "anticheat.account_held"
+    const val ANTICHEAT_REFUSED = PREFIX + "anticheat.refused"
+    const val ANTICHEAT_BANNED = PREFIX + "anticheat.banned"
+    const val ANTICHEAT_UNTRUSTED = PREFIX + "anticheat.untrusted"
 
     /** Messages that the player fixes by linking the mod or this Minecraft account. */
     val NEEDS_LINK = setOf(NO_TOKEN, TOKEN_REJECTED, LINK_DECLINED, NOT_LINKED, DEVICE_REVOKED)
@@ -88,6 +94,36 @@ object DisconnectReasons {
 
     fun deviceRevoked(): MutableComponent =
         message(DEVICE_REVOKED, "This computer was signed out of your LNB account. Link the mod again from the main menu.")
+
+    fun filesTimedOut(): MutableComponent =
+        message(FILES_TIMED_OUT, "LNB Warden didn't list your mods and packs in time. Try again.")
+
+    /** [names] are the files staff has to look at before the player can join. */
+    fun anticheatHeld(names: List<String>): MutableComponent = message(
+        ANTICHEAT_HELD,
+        "LNB's staff has to review these files before you can play with them:\n%s\nRemove them to play now.",
+        files(names),
+    )
+
+    fun anticheatAccountHeld(): MutableComponent =
+        message(ANTICHEAT_ACCOUNT_HELD, "LNB's staff has to review your account before you can play. Contact them.")
+
+    fun anticheatRefused(names: List<String>): MutableComponent = message(
+        ANTICHEAT_REFUSED,
+        "These files aren't allowed on LNB's server:\n%s\nRemove them to play.",
+        files(names),
+    )
+
+    fun anticheatBanned(names: List<String>): MutableComponent =
+        message(ANTICHEAT_BANNED, "These files are banned from LNB's server:\n%s", files(names)).withStyle(ChatFormatting.RED)
+
+    fun anticheatUntrusted(): MutableComponent =
+        message(ANTICHEAT_UNTRUSTED, "LNB's anticheat no longer trusts your account. Contact LNB's staff.")
+            .withStyle(ChatFormatting.RED)
+
+    /** File names, in white so they stand out. */
+    fun files(names: List<String>): MutableComponent =
+        Component.literal(names.joinToString(", ").ifEmpty { "?" }).withStyle(ChatFormatting.WHITE)
 
     /** The key of one of these messages, or null for any other component. */
     fun keyOf(component: Component): String? =

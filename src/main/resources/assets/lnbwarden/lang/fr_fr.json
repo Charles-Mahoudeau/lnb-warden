@@ -25,6 +25,10 @@
   "lnbwarden.configuration.api": "API",
   "lnbwarden.configuration.url": "URL de l’API",
   "lnbwarden.configuration.token": "Jeton de l’API",
+  "lnbwarden.configuration.anticheat": "Vérification des fichiers",
+  "lnbwarden.configuration.enabled": "Vérifier les fichiers des joueurs",
+  "lnbwarden.configuration.channelCheck": "Vérifier les canaux réseau",
+  "lnbwarden.configuration.banReason": "Motif de bannissement",
 
   "screen.lnbwarden.link.title": "Associer LNB Warden à ton compte LNB",
   "screen.lnbwarden.link.requesting": "Demande d’un code à LNB%s",
@@ -134,5 +138,16 @@
   "chat.lnbwarden.warning": "Avertissement de l’équipe LNB : %s",
 
   "chat.lnbwarden.api.down": "[LNB Warden] L’API de LNB est injoignable : %s",
-  "chat.lnbwarden.api.up": "[LNB Warden] L’API de LNB est de nouveau joignable."
+  "chat.lnbwarden.api.up": "[LNB Warden] L’API de LNB est de nouveau joignable.",
+
+  "commands.lnbwarden.status.anticheat.on": "Vérification des fichiers : activée, %s joueur(s) vérifié(s)",
+  "commands.lnbwarden.status.anticheat.off": "Vérification des fichiers : désactivée",
+  "disconnect.lnbwarden.anticheat.timed_out": "LNB Warden n’a pas listé vos mods et packs à temps. Réessayez.",
+  "disconnect.lnbwarden.anticheat.held": "L’équipe de LNB doit examiner ces fichiers avant que vous puissiez jouer avec :\n%s\nRetirez-les pour jouer dès maintenant.",
+  "disconnect.lnbwarden.anticheat.account_held": "L’équipe de LNB doit examiner votre compte avant que vous puissiez jouer. Contactez-la.",
+  "disconnect.lnbwarden.anticheat.refused": "Ces fichiers ne sont pas autorisés sur le serveur de LNB :\n%s\nRetirez-les pour jouer.",
+  "disconnect.lnbwarden.anticheat.banned": "Ces fichiers sont interdits sur le serveur de LNB :\n%s",
+  "disconnect.lnbwarden.anticheat.untrusted": "L’anticheat de LNB ne fait plus confiance à votre compte. Contactez l’équipe de LNB.",
+  "chat.lnbwarden.anticheat.pack_warning": "L’équipe de LNB va examiner ces packs de ressources : %s. Il pourra vous être demandé de les retirer.",
+  "chat.lnbwarden.anticheat.alert": "[LNB Warden] Alerte de l’anticheat : %s (%s). Voir le site de LNB."
 }

@@ -1,6 +1,7 @@
 package fr.bde_teknantes.lnb.warden.client
 
 import fr.bde_teknantes.lnb.warden.LnbWarden
+import fr.bde_teknantes.lnb.warden.client.anticheat.ClientFiles
 import fr.bde_teknantes.lnb.warden.client.auth.ClientAuth
 import fr.bde_teknantes.lnb.warden.client.gui.DisconnectLinkButton
 import fr.bde_teknantes.lnb.warden.client.gui.TitleMenu
@@ -39,7 +40,9 @@ class LnbWardenClient(modBus: IEventBus, container: ModContainer) {
             ClientAuth.tick()
             TitleMenu.tick()
             Presence.tick()
+            ClientFiles.tick()
         }
+        ClientFiles.warmUp()
         NeoForge.EVENT_BUS.addListener(Presence::onLoggingIn)
         NeoForge.EVENT_BUS.addListener(Presence::onLoggingOut)
         NeoForge.EVENT_BUS.addListener(ClientRealNames::onLoggingOut)

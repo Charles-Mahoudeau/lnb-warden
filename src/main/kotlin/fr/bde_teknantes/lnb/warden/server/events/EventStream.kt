@@ -6,11 +6,14 @@ import fr.bde_teknantes.lnb.warden.LnbWarden
 import fr.bde_teknantes.lnb.warden.common.api.ApiClient
 import fr.bde_teknantes.lnb.warden.common.auth.DisconnectReasons
 import fr.bde_teknantes.lnb.warden.server.AuthMode
+import fr.bde_teknantes.lnb.warden.server.Operators
 import fr.bde_teknantes.lnb.warden.server.ServerConfig
+import fr.bde_teknantes.lnb.warden.server.anticheat.ServerAnticheat
 import fr.bde_teknantes.lnb.warden.server.api.WardenServerApi
 import fr.bde_teknantes.lnb.warden.server.api.disconnectReason
 import fr.bde_teknantes.lnb.warden.server.session.ServerRealNames
 import fr.bde_teknantes.lnb.warden.server.session.SessionTracker
+import net.minecraft.ChatFormatting
 import net.minecraft.Util
 import net.minecraft.network.chat.Component
 import net.minecraft.server.MinecraftServer
@@ -24,7 +27,7 @@ import java.util.UUID
 
 /**
  * Keeps `GET /api/warden/server/events` open, on its own thread, to kick players banned, unlinked or signed out
- * on the website, and to follow changes to the real names players show.
+ * on the website, to follow changes to the real names players show, and to apply the anticheat's new verdicts.
  */
 object EventStream {
     sealed interface Status {
@@ -123,6 +126,8 @@ object EventStream {
         lastDataAt = Util.getMillis()
         backoffMs = 1_000L
         onConnected()
+        // Verdicts sent while the stream was down are lost: ask for the current ones.
+        server.execute { ServerAnticheat.resync(server) }
 
         response.body().bufferedReader().use { reader ->
             this.reader = reader
@@ -170,6 +175,8 @@ object EventStream {
             "realName" -> realName(server, body)
             "settings" -> LnbWarden.LOGGER.info("LNB's Warden settings changed: {}", body)
             "unban" -> LnbWarden.LOGGER.info("LNB unbanned {}", body.get("uuids"))
+            "anticheatVerdict" -> anticheatVerdict(server, body)
+            "anticheatAlert" -> anticheatAlert(body)
             "ping" -> Unit
             else -> LnbWarden.LOGGER.debug("Ignoring LNB event {}", type)
         }
@@ -204,6 +211,23 @@ object EventStream {
                 if (SessionTracker.hasSession(uuid)) ServerRealNames.update(server, uuid, shortName)
             }
         }
+    }
+
+    private fun anticheatVerdict(server: MinecraftServer, body: JsonObject) {
+        val sessionId = body.get("sessionId")?.takeIf { it.isJsonPrimitive }?.asString ?: return
+        val uuid = runCatching { UUID.fromString(body.get("uuid").asString) }.getOrNull() ?: return
+        val reportId = body.get("reportId")?.takeIf { it.isJsonPrimitive }?.asString
+        val verdict = ApiClient.GSON.fromJson(body.get("verdict"), WardenServerApi.Verdict::class.java)
+        server.execute { ServerAnticheat.onVerdictEvent(sessionId, uuid, reportId, verdict) }
+    }
+
+    /** Alerts are for staff, who handle them on the website: operators online are only told there is one. */
+    private fun anticheatAlert(body: JsonObject) {
+        fun text(field: String) = body.get(field)?.takeIf { it.isJsonPrimitive }?.asString
+        val kind = text("kind") ?: return
+        val about = listOfNotNull(text("name"), text("uuid")).joinToString(", ").ifEmpty { "-" }
+        LnbWarden.LOGGER.info("LNB anticheat alert: {} ({})", kind, about)
+        Operators.notify(Component.translatable("chat.lnbwarden.anticheat.alert", kind, about).withStyle(ChatFormatting.YELLOW))
     }
 
     private fun onConnected() {
