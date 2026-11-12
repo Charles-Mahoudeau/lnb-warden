@@ -34,6 +34,28 @@ object ServerConfig {
         )
         .defineEnum("mode", AuthMode.REQUIRED, EnumGetMethod.NAME_IGNORECASE)
 
+    /** Read when each connection starts. */
+    val ANTICHEAT_ENABLED: ModConfigSpec.BooleanValue = BUILDER
+        .pop()
+        .comment(
+            "File verification: authenticated players report the hashes of their mods, resource packs and shader pack,",
+            "and LNB's API says what to do with them. What is allowed is set on LNB's website, not here.",
+        )
+        .push("anticheat")
+        .comment("Whether players' files are checked. Needs auth.mode to be required or optional.")
+        .define("enabled", true)
+
+    val ANTICHEAT_CHANNEL_CHECK: ModConfigSpec.BooleanValue = BUILDER
+        .comment(
+            "Whether a player loses trust when their client uses the network channels of one of this server's mods",
+            "without reporting that mod.",
+        )
+        .define("channelCheck", true)
+
+    val ANTICHEAT_BAN_REASON: ModConfigSpec.ConfigValue<String> = BUILDER
+        .comment("The reason of the bans the anticheat issues, shown to the player. %s is the name of the file.")
+        .define("banReason", "Fichier interdit par l'anticheat : %s")
+
     val SPEC: ModConfigSpec = BUILDER.pop().build()
 
     val isApiConfigured: Boolean
