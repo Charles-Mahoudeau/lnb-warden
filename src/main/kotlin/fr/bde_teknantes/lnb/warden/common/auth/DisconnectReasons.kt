@@ -112,7 +112,7 @@ object DisconnectReasons {
         ANTICHEAT_REFUSED,
         "These files aren't allowed on LNB's server:\n%s\nRemove them to play.",
         files(names),
-    )
+    ).withStyle(ChatFormatting.RED)
 
     fun anticheatBanned(names: List<String>): MutableComponent =
         message(ANTICHEAT_BANNED, "These files are banned from LNB's server:\n%s", files(names)).withStyle(ChatFormatting.RED)
