@@ -54,7 +54,7 @@ object ServerConfig {
 
     val ANTICHEAT_BAN_REASON: ModConfigSpec.ConfigValue<String> = BUILDER
         .comment("The reason of the bans the anticheat issues, shown to the player. %s is the name of the file.")
-        .define("banReason", "Fichier interdit par l'anticheat : %s")
+        .define("banReason", "File banned by the anticheat: %s")
 
     val SPEC: ModConfigSpec = BUILDER.pop().build()
 

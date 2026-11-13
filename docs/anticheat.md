@@ -172,7 +172,7 @@ Added to `ServerConfig` (`config/lnbwarden-server.toml`):
 |--------------------------|-----------------------------------------|-------------------------------------------------------------------|
 | `anticheat.enabled`      | `true`                                  | Whether players' files are checked. Needs `auth.mode` not `off`.  |
 | `anticheat.channelCheck` | `true`                                  | Whether the channel check runs at join.                           |
-| `anticheat.banReason`    | `Fichier interdit par l'anticheat : %s` | Reason of the bans issued, shown to the player. `%s` is the file. |
+| `anticheat.banReason`    | `File banned by the anticheat: %s`      | Reason of the bans issued, shown to the player. `%s` is the file. |
 
 `/lnbwarden status` shows whether file verification is on and how many players are checked.
 
