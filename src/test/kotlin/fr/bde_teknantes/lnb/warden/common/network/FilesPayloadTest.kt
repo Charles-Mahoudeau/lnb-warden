@@ -29,9 +29,17 @@ class FilesPayloadTest {
             ReportedFile.of(FileKind.RESOURCE_PACK, sha(3), null, "folder", facts = PackFacts(coreShaders = false, alteredTextures = true)),
             ReportedFile.of(FileKind.SHADER, sha(4), 0, "shaders.zip"),
             ReportedFile.of(FileKind.CLIENT, sha(5), 7, "minecraft.jar", listOf("minecraft")),
+            ReportedFile.of(FileKind.MOD, sha(6), 9, "kffmod-neoforge-5.12.0.jar", listOf("kotlinforforge"), nestedIn = sha(1).uppercase()),
         )
         val payload = FilesReportPayload(files, last = true)
         assertEquals(payload, roundTrip(payload))
+    }
+
+    @Test
+    fun `a nested jar keeps the hash of its top-level file`() {
+        val nested = ReportedFile.of(FileKind.MOD, sha(2), 1, "lib.jar", nestedIn = sha(1))
+        assertEquals(sha(1), roundTrip(FilesReportPayload(listOf(nested), true)).files.single().nestedIn)
+        assertFailsWith<IllegalArgumentException> { ReportedFile.of(FileKind.MOD, sha(2), 1, "lib.jar", nestedIn = "abc") }
     }
 
     @Test

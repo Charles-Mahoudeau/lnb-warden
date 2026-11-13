@@ -269,7 +269,10 @@ object ServerAnticheat {
 
     fun reportBody(entry: Tracked) = WardenServerApi.AnticheatReportBody(
         entry.sessionId,
-        entry.files.values.map { file ->
+        // The API refuses a nested jar whose top-level file isn't in the report, or is nested itself.
+        entry.files.values.filter { file ->
+            file.nestedIn == null || entry.files[file.nestedIn]?.let { it.nestedIn == null } == true
+        }.map { file ->
             WardenServerApi.AnticheatFile(
                 kind = file.kind.id,
                 sha512 = file.sha512,
@@ -280,6 +283,7 @@ object ServerAnticheat {
                 version = file.version,
                 loader = file.loader,
                 facts = file.facts?.let { WardenServerApi.AnticheatFacts(it.coreShaders, it.alteredTextures) },
+                nestedIn = file.nestedIn,
             )
         },
     )
