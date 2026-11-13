@@ -41,8 +41,11 @@ data class ReportedFile(
     val version: String? = null,
     val loader: String? = null,
     val facts: PackFacts? = null,
+    /** For a jar found inside another (jar-in-jar): the SHA-512 of the top-level file that holds it. */
+    val nestedIn: String? = null,
 ) {
     init {
+        require(nestedIn == null || SHA512.matches(nestedIn)) { "Not a SHA-512" }
         require(SHA512.matches(sha512)) { "Not a SHA-512" }
         require(fingerprint == null || fingerprint in 0..0xFFFFFFFFL) { "Not an unsigned 32-bit fingerprint" }
     }
@@ -62,6 +65,7 @@ data class ReportedFile(
         private const val HAS_FACTS = 16
         private const val CORE_SHADERS = 32
         private const val ALTERED_TEXTURES = 64
+        private const val HAS_NESTED_IN = 128
 
         private val FILENAME = ByteBufCodecs.stringUtf8(MAX_FILENAME)
         private val TEXT = ByteBufCodecs.stringUtf8(MAX_TEXT)
@@ -77,6 +81,7 @@ data class ReportedFile(
             version: String? = null,
             loader: String? = null,
             facts: PackFacts? = null,
+            nestedIn: String? = null,
         ) = ReportedFile(
             kind,
             sha512.lowercase(),
@@ -87,6 +92,7 @@ data class ReportedFile(
             text(version),
             text(loader),
             facts.takeIf { kind == FileKind.RESOURCE_PACK },
+            nestedIn?.lowercase(),
         )
 
         private fun text(value: String?): String? = value?.trim()?.take(MAX_TEXT)?.trim()?.ifEmpty { null }
@@ -105,6 +111,7 @@ data class ReportedFile(
                     if (file.facts.coreShaders) flags = flags or CORE_SHADERS
                     if (file.facts.alteredTextures) flags = flags or ALTERED_TEXTURES
                 }
+                if (file.nestedIn != null) flags = flags or HAS_NESTED_IN
                 buf.writeByte(flags)
                 if (file.fingerprint != null) buf.writeInt(file.fingerprint.toInt())
                 FILENAME.encode(buf, file.filename)
@@ -113,6 +120,7 @@ data class ReportedFile(
                 file.name?.let { TEXT.encode(buf, it) }
                 file.version?.let { TEXT.encode(buf, it) }
                 file.loader?.let { TEXT.encode(buf, it) }
+                file.nestedIn?.let { buf.writeBytes(HEX.parseHex(it)) }
             },
             { buf ->
                 val kind = FileKind.entries.getOrNull(buf.readUnsignedByte().toInt())
@@ -138,6 +146,7 @@ data class ReportedFile(
                     } else {
                         null
                     },
+                    nestedIn = if (flags and HAS_NESTED_IN != 0) ByteArray(64).also(buf::readBytes).let(HEX::formatHex) else null,
                 )
             },
         )

@@ -17,6 +17,12 @@ class AnticheatJsonTest {
     }
 
     @Test
+    fun `a nested jar names its top-level file`() {
+        val file = WardenServerApi.AnticheatFile("mod", "a".repeat(128), 1, "k.jar", "k", null, null, null, null, "b".repeat(128))
+        assertEquals(true, "\"nestedIn\":\"${"b".repeat(128)}\"" in ApiClient.GSON.toJson(file))
+    }
+
+    @Test
     fun `the fingerprint is sent as a plain number`() {
         val file = WardenServerApi.AnticheatFile("mod", "a".repeat(128), 4294967295, "m.jar", "m", null, null, null, null)
         assertEquals(true, "\"fingerprint\":4294967295," in ApiClient.GSON.toJson(file))

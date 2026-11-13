@@ -33,6 +33,8 @@ object FileScanner {
         val name: String? = null,
         val version: String? = null,
         val loader: String? = null,
+        /** For a jar nested in another: the top-level file that holds it. */
+        val nestedIn: Path? = null,
     )
 
     /** The game and the loader, and LNB Warden itself: nothing LNB looks up or scores. */
@@ -57,13 +59,14 @@ object FileScanner {
         for (candidate in candidates) {
             try {
                 val hashes = FileHasher.hash(candidate.path)
+                val nestedIn = candidate.nestedIn?.let { FileHasher.hash(it).sha512 }
                 val facts = if (candidate.kind == FileKind.RESOURCE_PACK) PackInspector.inspect(candidate.path) else null
                 // The same file twice (a copy under another name) is reported once: the API wants unique hashes.
                 files.putIfAbsent(
                     hashes.sha512,
                     ReportedFile.of(
                         candidate.kind, hashes.sha512, hashes.fingerprint, candidate.path.name, candidate.modIds,
-                        candidate.name, candidate.version, candidate.loader, facts,
+                        candidate.name, candidate.version, candidate.loader, facts, nestedIn,
                     ),
                 )
             } catch (e: Exception) {
@@ -73,12 +76,17 @@ object FileScanner {
         if (files.size > FilesReportPayload.MAX_FILES) {
             LnbWarden.LOGGER.warn("{} files are loaded: only the first {} are reported", files.size, FilesReportPayload.MAX_FILES)
         }
-        return files.values.take(FilesReportPayload.MAX_FILES)
+        val kept = files.values.take(FilesReportPayload.MAX_FILES)
+        // A nested jar only means something next to its top-level file: the API refuses it alone.
+        val topLevel = kept.filter { it.nestedIn == null }.mapTo(HashSet()) { it.sha512 }
+        return kept.filter { it.nestedIn == null || it.nestedIn in topLevel }
     }
 
     /**
-     * One entry per jar the loader found by itself. A jar nested in another isn't reported: the hash of the outer
-     * jar already covers it. Its mod IDs go to the outer jar, so the server knows where they come from.
+     * One entry per jar the loader found, and one per jar nested in another (jar-in-jar), marked with the top-level
+     * file that holds it. A nested jar's hash is on no mod platform, so LNB looks the top-level file up instead, which
+     * is also in the list. The nested jar is still reported so that a modified one can't hide inside another.
+     * The nested mod IDs also go to the top-level file, so the server knows where they come from.
      */
     private fun findMods(): List<Candidate> {
         val list = LoadingModList.get()
@@ -89,19 +97,31 @@ object FileScanner {
         }
 
         val candidates = mutableListOf<Candidate>()
+        val reported = HashSet<Path>()
+        fun add(file: IModFile, mods: List<String>, name: String?, version: String?, nestedIn: IModFile?) {
+            val ids = mods + nestedIds[file].orEmpty()
+            val kind = if (ids.any { it in CLIENT_MODS }) FileKind.CLIENT else FileKind.MOD
+            candidates += Candidate(kind, file.filePath, ids, name, version, LOADER, nestedIn?.filePath)
+            reported.add(file.filePath)
+        }
+
         for (info in list.modFiles) {
             val file = info.file
-            if (file.discoveryAttributes.parent() != null || !isOnDisk(file.filePath)) continue
-            val ids = info.mods.map { it.modId } + nestedIds[file].orEmpty()
+            val root = rootOf(info.file)
             val mod = info.mods.firstOrNull()
-            candidates += Candidate(
-                kind = if (ids.any { it in CLIENT_MODS }) FileKind.CLIENT else FileKind.MOD,
-                path = file.filePath,
-                modIds = ids,
-                name = mod?.displayName,
-                version = mod?.version?.toString(),
-                loader = LOADER,
-            )
+            val modIds = info.mods.map { it.modId }
+            if (root === file) {
+                if (isOnDisk(file.filePath)) add(file, modIds, mod?.displayName, mod?.version?.toString(), null)
+            } else if (isOnDisk(root.filePath)) {
+                add(file, modIds, mod?.displayName, mod?.version?.toString(), root)
+            }
+        }
+        // The top-level file of a nested jar is always reported, even when it holds no mod itself.
+        for (info in list.modFiles) {
+            val root = rootOf(info.file)
+            if (root !== info.file && isOnDisk(root.filePath) && root.filePath !in reported) {
+                add(root, emptyList(), null, null, null)
+            }
         }
 
         // Jars without a mod in them (libraries, language loaders), when the player put them with the mods.
@@ -110,7 +130,7 @@ object FileScanner {
             val file = info.file
             val path = file.filePath
             if (file.discoveryAttributes.parent() != null || !isOnDisk(path)) continue
-            if (path.toAbsolutePath().normalize().parent != modsFolder) continue
+            if (path.toAbsolutePath().normalize().parent != modsFolder || path in reported) continue
             candidates += Candidate(FileKind.MOD, path, loader = LOADER)
         }
         return candidates

@@ -61,6 +61,8 @@ object WardenServerApi {
         val version: String?,
         val loader: String?,
         val facts: AnticheatFacts?,
+        /** The SHA-512 of the top-level file this jar-in-jar was found in. */
+        val nestedIn: String? = null,
     )
 
     data class AnticheatReportBody(val sessionId: String, val files: List<AnticheatFile>)

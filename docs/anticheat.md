@@ -27,18 +27,21 @@ in singleplayer, on LAN games, or when `auth.mode` is `off`.
 
 ## What is reported
 
-For each file: `kind`, `sha512`, `fingerprint`, `filename`, and when known `modId`, `name`, `version`, `loader` and
+For each file: `kind`, `sha512`, `fingerprint`, `filename`, and when known `modId`, `name`, `version`, `loader`, `nestedIn` and
 `facts`.
 
 | Kind           | Files                                                                                                            |
 |----------------|------------------------------------------------------------------------------------------------------------------|
-| `mod`          | Every top-level file NeoForge loaded mods from (`LoadingModList`), and loader plugins sitting in the mods folder. |
+| `mod`          | Every file NeoForge loaded mods from (`LoadingModList`), nested ones included, and loader plugins sitting in the mods folder. |
 | `client`       | The files of `minecraft`, `neoforge` and LNB Warden itself.                                                       |
 | `resourcepack` | The selected resource packs that are a zip or a folder of `resourcepacks/`. Built-in and mod-provided packs aren't. |
 | `shader`       | The pack Iris or Oculus has enabled, read from `config/iris.properties` or `config/oculus.properties`.           |
 
-- Jars nested in another jar aren't reported: the outer jar's hash already covers them. Their mod IDs are attached to
-  the outer file, for the channel check.
+- A jar nested in another (jar-in-jar) is reported too, with `nestedIn`: the SHA-512 of the top-level file that holds
+  it. Its hash is on no mod platform, so LNB's API looks the top-level file up instead, and that file is always in the
+  report, even when it holds no mod itself. Nested jars are still listed so that a modified one can't hide inside
+  another. The nested mod IDs are also attached to the top-level file, for the channel check. When two jars nest the
+  same library, it is reported once.
 - A folder is hashed as the SHA-512 of its sorted relative paths and contents, without a fingerprint.
 - The fingerprint is CurseForge's: MurmurHash2 with seed 1 over the file without its bytes 9, 10, 13 and 32. LNB's API
   uses it to look the file up on CurseForge, and the SHA-512 to look it up on Modrinth.
