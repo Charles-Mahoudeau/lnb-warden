@@ -3,6 +3,7 @@ package fr.bde_teknantes.lnb.warden.server
 import fr.bde_teknantes.lnb.warden.LnbWarden
 import fr.bde_teknantes.lnb.warden.common.api.ApiClient
 import fr.bde_teknantes.lnb.warden.server.events.EventStream
+import fr.bde_teknantes.lnb.warden.server.session.SessionTracker
 import net.neoforged.neoforge.event.server.ServerStartedEvent
 import net.neoforged.neoforge.event.server.ServerStoppingEvent
 
@@ -18,10 +19,12 @@ object WardenServer {
         } else if (!ApiClient.isSecure(ServerConfig.API_URL.get())) {
             LnbWarden.LOGGER.warn("api.url doesn't use HTTPS: the server's API token travels unencrypted")
         }
+        if (ServerConfig.isApiConfigured) SessionTracker.endLeftovers()
         EventStream.start(server)
     }
 
     fun onStopping(event: ServerStoppingEvent) {
         EventStream.stop()
+        SessionTracker.endAll()
     }
 }

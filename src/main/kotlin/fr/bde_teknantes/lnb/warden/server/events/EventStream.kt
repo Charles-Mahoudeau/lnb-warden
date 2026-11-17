@@ -11,6 +11,7 @@ import fr.bde_teknantes.lnb.warden.server.ServerConfig
 import fr.bde_teknantes.lnb.warden.server.anticheat.ServerAnticheat
 import fr.bde_teknantes.lnb.warden.server.api.WardenServerApi
 import fr.bde_teknantes.lnb.warden.server.api.disconnectReason
+import fr.bde_teknantes.lnb.warden.server.playtime.ServerPlaytime
 import fr.bde_teknantes.lnb.warden.server.session.ServerRealNames
 import fr.bde_teknantes.lnb.warden.server.session.SessionTracker
 import net.minecraft.ChatFormatting
@@ -172,6 +173,9 @@ object EventStream {
 
         when (type) {
             "kick" -> kick(server, body)
+            "playtimeWarning" -> playtimeWarning(server, body)
+            "playtimeGrace" -> playtimeGrace(server, body)
+            "playtimeUpdate" -> playtimeUpdate(server, body)
             "realName" -> realName(server, body)
             "settings" -> LnbWarden.LOGGER.info("LNB's Warden settings changed: {}", body)
             "unban" -> LnbWarden.LOGGER.info("LNB unbanned {}", body.get("uuids"))
@@ -185,10 +189,13 @@ object EventStream {
     private fun kick(server: MinecraftServer, body: JsonObject) {
         val uuids = body.getAsJsonArray("uuids")?.mapNotNull { runCatching { UUID.fromString(it.asString) }.getOrNull() }.orEmpty()
         val reason = body.get("reason")?.asString
+        val playtime = body.get("playtime")?.takeIf { it.isJsonObject }
+            ?.let { ApiClient.GSON.fromJson(it, WardenServerApi.Playtime::class.java) }
         val message: Component = when (reason) {
             "banned" -> ApiClient.GSON.fromJson(body.get("ban"), WardenServerApi.Ban::class.java).disconnectReason()
             "unlinked" -> DisconnectReasons.unlinked()
             "deviceRevoked" -> DisconnectReasons.deviceRevoked()
+            "playtimeLimit" -> playtime.disconnectReason()
             else -> Component.translatable("multiplayer.disconnect.kicked")
         }
 
@@ -196,9 +203,32 @@ object EventStream {
             for (uuid in uuids) {
                 val player = server.playerList.getPlayer(uuid) ?: continue
                 LnbWarden.LOGGER.info("LNB kicks {}: {}", player.gameProfile.name, reason)
-                player.connection.disconnect(message)
+                if (reason == "playtimeLimit") ServerPlaytime.kick(player, playtime) else player.connection.disconnect(message)
             }
         }
+    }
+
+    private fun uuidsOf(body: JsonObject): List<UUID> =
+        body.getAsJsonArray("uuids")?.mapNotNull { runCatching { UUID.fromString(it.asString) }.getOrNull() }.orEmpty()
+
+    private fun playtimeWarning(server: MinecraftServer, body: JsonObject) {
+        val seconds = body.get("remainingSeconds")?.takeIf { it.isJsonPrimitive }?.asLong ?: return
+        val kind = body.get("kind")?.takeIf { it.isJsonPrimitive }?.asString
+        val uuids = uuidsOf(body)
+        server.execute { uuids.forEach { ServerPlaytime.onWarning(server, it, seconds, kind) } }
+    }
+
+    private fun playtimeGrace(server: MinecraftServer, body: JsonObject) {
+        val endsAt = body.get("graceEndsAt")?.takeIf { it.isJsonPrimitive }?.asString
+        val uuids = uuidsOf(body)
+        server.execute { uuids.forEach { ServerPlaytime.onGrace(server, it, endsAt) } }
+    }
+
+    private fun playtimeUpdate(server: MinecraftServer, body: JsonObject) {
+        val playtime = body.get("playtime")?.takeIf { it.isJsonObject }
+            ?.let { ApiClient.GSON.fromJson(it, WardenServerApi.Playtime::class.java) } ?: return
+        val uuids = uuidsOf(body)
+        server.execute { uuids.forEach { ServerPlaytime.onUpdate(server, it, playtime) } }
     }
 
     private fun realName(server: MinecraftServer, body: JsonObject) {

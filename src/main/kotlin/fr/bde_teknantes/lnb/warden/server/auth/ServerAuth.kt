@@ -7,6 +7,7 @@ import fr.bde_teknantes.lnb.warden.server.AuthMode
 import fr.bde_teknantes.lnb.warden.server.ServerConfig
 import fr.bde_teknantes.lnb.warden.server.anticheat.ServerAnticheat
 import fr.bde_teknantes.lnb.warden.server.api.WardenServerApi
+import fr.bde_teknantes.lnb.warden.server.playtime.ServerPlaytime
 import fr.bde_teknantes.lnb.warden.server.session.ServerRealNames
 import fr.bde_teknantes.lnb.warden.server.session.SessionTracker
 import net.minecraft.ChatFormatting
@@ -31,6 +32,8 @@ data class PendingJoin(
     val shortName: String?,
     /** Why the player plays as a guest, or null when they are authenticated. */
     val guestReason: Component?,
+    /** LNB's playtime state for the player, when a limit may apply. */
+    val playtime: WardenServerApi.Playtime? = null,
 )
 
 /** Runs [AuthTask] for each connection to a dedicated server, unless `auth.mode` is `off`. */
@@ -84,6 +87,7 @@ object ServerAuth {
         ServerRealNames.onJoin(player, join?.shortName)
         if (join == null) return
         join.sessionId?.let { SessionTracker.track(player.uuid, it) }
+        ServerPlaytime.onLogin(player.uuid, join.playtime)
         greet(player, join)
     }
 

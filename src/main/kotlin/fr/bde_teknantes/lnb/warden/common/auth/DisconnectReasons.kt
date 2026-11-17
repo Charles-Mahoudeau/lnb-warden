@@ -31,6 +31,8 @@ object DisconnectReasons {
     const val INVALID_TICKET = PREFIX + "invalid_ticket"
     const val UNLINKED = PREFIX + "unlinked"
     const val DEVICE_REVOKED = PREFIX + "device_revoked"
+    const val PLAYTIME_LIMIT = PREFIX + "playtime_limit"
+    const val PLAYTIME_LIMIT_NO_DATE = PREFIX + "playtime_limit_no_date"
     const val FILES_TIMED_OUT = PREFIX + "anticheat.timed_out"
     const val ANTICHEAT_HELD = PREFIX + "anticheat.held"
     const val ANTICHEAT_ACCOUNT_HELD = PREFIX + "anticheat.account_held"
@@ -94,6 +96,16 @@ object DisconnectReasons {
 
     fun deviceRevoked(): MutableComponent =
         message(DEVICE_REVOKED, "This computer was signed out of your LNB account. Link the mod again from the main menu.")
+
+    /** [until] is when the player can join again, formatted, or null when LNB didn't say. */
+    fun playtimeLimit(until: String?): MutableComponent {
+        val text = if (until == null) {
+            message(PLAYTIME_LIMIT_NO_DATE, "You used your weekly Minecraft time. You can play again later.")
+        } else {
+            message(PLAYTIME_LIMIT, "You used your weekly Minecraft time. You can play again at %s.", Component.literal(until).withStyle(ChatFormatting.WHITE))
+        }
+        return text.withStyle(ChatFormatting.RED)
+    }
 
     fun filesTimedOut(): MutableComponent =
         message(FILES_TIMED_OUT, "LNB Warden didn't list your mods and packs in time. Try again.")
