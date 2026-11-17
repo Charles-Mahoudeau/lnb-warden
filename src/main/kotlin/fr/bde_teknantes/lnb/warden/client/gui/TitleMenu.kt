@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.components.AbstractWidget
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.DisconnectedScreen
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.gui.screens.TitleScreen
 import net.minecraft.client.gui.screens.multiplayer.JoinMultiplayerScreen
 import net.minecraft.network.chat.Component
@@ -14,7 +15,7 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent
 import net.neoforged.neoforge.client.event.ScreenEvent
 
 /**
- * Reshapes the title screen's menu: Multiplayer goes straight to LNB's server, Realms is gone, and Mods shares its
+ * Reshapes the title screen's menu: Multiplayer goes straight to LNB's server (Shift-click opens the default server list), Realms is gone, and Mods shares its
  * row with the account button, whose badge shows the LNB link's state. Leaving a server comes back to it.
  */
 object TitleMenu {
@@ -72,7 +73,14 @@ object TitleMenu {
         } ?: return
         event.removeListener(multiplayer)
         // No token is fine: the server decides whether linking is required, and says so.
-        val replacement = Button.builder(multiplayer.message) { LnbServer.connect(screen) }
+        val replacement = Button.builder(multiplayer.message) {
+            // Shift-click keeps the vanilla server list reachable.
+            if (Screen.hasShiftDown()) {
+                Minecraft.getInstance().setScreen(JoinMultiplayerScreen(screen))
+            } else {
+                LnbServer.connect(screen)
+            }
+        }
             .bounds(multiplayer.x, multiplayer.y, multiplayer.width, multiplayer.height)
             .tooltip(multiplayer.tooltip)
             .build()
