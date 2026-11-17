@@ -110,7 +110,8 @@ never the machine's hostname.
 ### Main menu
 
 - The **Multiplayer** button connects straight to `serverAddress`. It stays enabled even without a token: the server
-  decides whether linking is required (see `auth.mode`), and refuses the player with a clear message when it is.
+  decides whether linking is required (see `auth.mode`), and refuses the player with a clear message when it is. Shift-clicking it opens the default multiplayer menu (the server
+  list) instead.
 - An LNB status widget is always visible on the title screen. Every state is shown, none is silent:
 
 | State                | Shows                                                                     |
