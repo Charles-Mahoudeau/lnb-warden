@@ -118,6 +118,7 @@ class AuthTask(
                     linked = login.linked == true,
                     shortName = login.shortName,
                     guestReason = null,
+                    playtime = login.playtime,
                 )
             )
             return
@@ -131,6 +132,7 @@ class AuthTask(
                 "accountLimitReached" -> DisconnectReasons.accountLimitReached(login.limit?.max ?: 0)
                 "notLinked" -> DisconnectReasons.notLinked(profile.name)
                 "schoolNotAllowed" -> DisconnectReasons.schoolNotAllowed()
+                "playtimeLimitReached" -> login.playtime.disconnectReason()
                 else -> {
                     if (login.reason == "invalidTicket") {
                         LnbWarden.LOGGER.warn("LNB rejected the join ticket of {}", profile.name)

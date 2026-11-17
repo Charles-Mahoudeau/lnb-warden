@@ -16,12 +16,38 @@ object WardenServerApi {
     data class Ban(val reason: String, val expiresAt: String?)
     data class Limit(val used: Int, val max: Int)
 
+    /**
+     * The playtime state LNB works out for a Minecraft account. The mod only shows it and obeys it.
+     *
+     * One class for every place it appears: a login answer, an event, a heartbeat, the player lookup and the
+     * `playtimeLimitReached` denial (which only sets [windowEndsAt] and [resetsAt]). Fields a place doesn't send are null.
+     */
+    data class Playtime(
+        /** False while LNB only observes: everything else is then ignored. */
+        val enforced: Boolean? = null,
+        /** False when the limit doesn't apply to this player or this Minecraft account. */
+        val limited: Boolean? = null,
+        /** True when the time played right now counts, that is inside a restricted window. */
+        val counting: Boolean? = null,
+        val remainingSeconds: Long? = null,
+        val limitSeconds: Long? = null,
+        val windowEndsAt: String? = null,
+        val nextWindowStartsAt: String? = null,
+        val grace: Boolean? = null,
+        val graceEndsAt: String? = null,
+        val resetsAt: String? = null,
+        /** Player lookup only: `unlimited`, `free`, `counting`, `grace` or `blocked`. */
+        val state: String? = null,
+        /** Player lookup only: the seconds counted this week. */
+        val usedSeconds: Long? = null,
+    )
+
     /** The LNB user behind an `allowed` login. [displayName] is their real name, as they chose to show it. */
     data class LoginPlayer(val userId: String, val displayName: String?)
 
     /**
      * `allowed` sets [sessionId], [linked] and [warnings], and [player] for LNB users;
-     * `denied` sets [reason], and [ban] or [limit].
+     * `denied` sets [reason], and [ban], [limit] or [playtime]. [playtime] also tells the state of an `allowed` player.
      */
     data class LoginResult(
         val result: String,
@@ -32,17 +58,21 @@ object WardenServerApi {
         val reason: String?,
         val ban: Ban?,
         val limit: Limit?,
+        val playtime: Playtime? = null,
     ) {
         /** The player's real name, null for guests. */
         val shortName: String? get() = player?.displayName
     }
 
-    data class Player(val userId: String, val name: String)
+    data class Player(val userId: String, val name: String, val playtime: Playtime? = null)
 
     data class HeartbeatBody(val sessionIds: List<String>)
 
-    /** Sessions the API has closed, such as after an outage longer than 3 minutes. */
-    data class HeartbeatResult(val unknown: List<String>)
+    /**
+     * [unknown] are the sessions the API has closed, such as after an outage longer than 3 minutes.
+     * [playtime] is the state of every open session of the request, by session id.
+     */
+    data class HeartbeatResult(val unknown: List<String>, val playtime: Map<String, Playtime>? = null)
 
     data class EndSessionBody(val sessionId: String, val reason: String)
 
