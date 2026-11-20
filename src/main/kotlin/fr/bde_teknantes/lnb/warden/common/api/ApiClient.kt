@@ -59,6 +59,8 @@ object ApiClient {
 
     private val DEFAULT_TIMEOUT: Duration = Duration.ofSeconds(15)
 
+    private val RESERVED_HEADERS = setOf("accept", "authorization", "content-type")
+
     private val LOOPBACK_HOSTS = setOf("localhost", "127.0.0.1", "::1", "[::1]")
 
     /** HTTPS anywhere, or plain HTTP on the local machine for development. */
@@ -87,7 +89,8 @@ object ApiClient {
     /**
      * Sends a JSON request and decodes the answer as [type], or as [Unit] for empty answers.
      * With [requireSecure], nothing is sent to a URL that fails [isSecure]: a request carries the device token,
-     * or its answer does.
+     * or its answer does. [headers] are added to the request, for routes that ask for one (a units header, say); they
+     * can't replace the ones the client sets itself (Accept, Authorization, Content-Type).
      */
     fun <T> send(
         baseUrl: String,
@@ -98,6 +101,7 @@ object ApiClient {
         type: Class<T>,
         requireSecure: Boolean = true,
         timeout: Duration = DEFAULT_TIMEOUT,
+        headers: Map<String, String> = emptyMap(),
     ): CompletableFuture<ApiResult<T>> {
         if (requireSecure && !isSecure(baseUrl)) {
             return CompletableFuture.completedFuture(ApiResult.Network(InsecureApiUrlException(baseUrl)))
@@ -108,7 +112,10 @@ object ApiClient {
             else HttpRequest.BodyPublishers.ofString((if (body is WithNulls) GSON_WITH_NULLS else GSON).toJson(body))
             request(baseUrl, path, token)
                 .timeout(timeout)
-                .apply { if (body != null) header("Content-Type", "application/json") }
+                .apply {
+                    headers.forEach { (name, value) -> if (name.lowercase() !in RESERVED_HEADERS) header(name, value) }
+                    if (body != null) header("Content-Type", "application/json")
+                }
                 .method(method, publisher)
                 .build()
         } catch (e: IllegalArgumentException) {
@@ -129,9 +136,10 @@ object ApiClient {
         body: Any? = null,
         requireSecure: Boolean = true,
         timeout: Duration? = null,
+        headers: Map<String, String> = emptyMap(),
     ): CompletableFuture<ApiResult<T>> =
-        if (timeout == null) send(baseUrl, method, path, token, body, T::class.java, requireSecure)
-        else send(baseUrl, method, path, token, body, T::class.java, requireSecure, timeout)
+        if (timeout == null) send(baseUrl, method, path, token, body, T::class.java, requireSecure, headers = headers)
+        else send(baseUrl, method, path, token, body, T::class.java, requireSecure, timeout, headers)
 
     private fun <T> decode(response: HttpResponse<String>, type: Class<T>): ApiResult<T> {
         val status = response.statusCode()
