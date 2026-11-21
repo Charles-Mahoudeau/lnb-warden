@@ -7,6 +7,8 @@ import fr.bde_teknantes.lnb.warden.server.WardenServer
 import fr.bde_teknantes.lnb.warden.server.anticheat.ServerAnticheat
 import fr.bde_teknantes.lnb.warden.server.auth.ServerAuth
 import fr.bde_teknantes.lnb.warden.server.changelog.ServerChangelog
+import fr.bde_teknantes.lnb.warden.server.clearlag.ClearLagConfig
+import fr.bde_teknantes.lnb.warden.server.clearlag.ServerClearLag
 import fr.bde_teknantes.lnb.warden.server.events.EventStream
 import fr.bde_teknantes.lnb.warden.server.playtime.ServerPlaytime
 import fr.bde_teknantes.lnb.warden.server.session.ServerRealNames
@@ -33,6 +35,7 @@ class LnbWarden(modBus: IEventBus, container: ModContainer) {
         // COMMON configs are read from the local config/ folder and are never synced to clients,
         // unlike SERVER configs, which is why server-only secrets go here.
         container.registerConfig(ModConfig.Type.COMMON, ServerConfig.SPEC, "$ID-server.toml")
+        container.registerConfig(ModConfig.Type.COMMON, ClearLagConfig.SPEC, "$ID-clearlag.toml")
 
         modBus.addListener(WardenNetwork::register)
         modBus.addListener(ServerAuth::registerTasks)
@@ -50,6 +53,7 @@ class LnbWarden(modBus: IEventBus, container: ModContainer) {
         NeoForge.EVENT_BUS.addListener(ServerPlaytime::onPlayerLoggedOut)
         NeoForge.EVENT_BUS.addListener(ServerChangelog::onPlayerLoggedIn)
         NeoForge.EVENT_BUS.addListener(ServerChangelog::onPlayerLoggedOut)
+        NeoForge.EVENT_BUS.addListener(ServerClearLag::onServerTick)
         NeoForge.EVENT_BUS.addListener(WardenServer::onStarted)
         NeoForge.EVENT_BUS.addListener(WardenServer::onStopping)
 

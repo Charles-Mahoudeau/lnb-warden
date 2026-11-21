@@ -192,5 +192,17 @@
   "screen.lnbwarden.changelog.lang.en": "anglais",
   "toast.lnbwarden.changelog": "Nouveau sur le serveur",
   "chat.lnbwarden.changelog": "Un nouveau changelog est paru : %s. Clique ici ou tape /changelog pour le relire.",
-  "chat.lnbwarden.changelog.hover": "Ouvrir le changelog"
+  "chat.lnbwarden.changelog.hover": "Ouvrir le changelog",
+
+  "chat.lnbwarden.clearlag.warning": "[ClearLag] Les objets au sol, les orbes d’expérience et les monstres seront supprimés dans %s s.",
+  "actionbar.lnbwarden.clearlag": "Nettoyage dans %s s",
+  "chat.lnbwarden.clearlag.result": "[ClearLag] %s objet(s), %s orbe(s) d’expérience et %s monstre(s) supprimés.",
+  "commands.lnbwarden.clearlag.run": "%s objet(s), %s orbe(s) d’expérience et %s monstre(s) supprimés.",
+  "commands.lnbwarden.clearlag.reload": "Compte à rebours de ClearLag relancé. Le fichier de config s’applique seul quand il est enregistré.",
+  "commands.lnbwarden.clearlag.status.off": "ClearLag : désactivé",
+  "commands.lnbwarden.clearlag.status": "ClearLag : prochain nettoyage dans %s (%s, tick moyen %s ms)",
+  "commands.lnbwarden.clearlag.status.normal": "intervalle normal",
+  "commands.lnbwarden.clearlag.status.lag": "intervalle de lag",
+  "commands.lnbwarden.clearlag.status.never": "ClearLag : aucun nettoyage depuis le démarrage du serveur",
+  "commands.lnbwarden.clearlag.status.last": "ClearLag : dernier nettoyage à %s : %s objet(s), %s orbe(s) d’expérience, %s monstre(s)"
 }
