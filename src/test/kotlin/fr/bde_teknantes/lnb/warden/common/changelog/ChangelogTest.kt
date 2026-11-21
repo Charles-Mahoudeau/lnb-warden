@@ -72,4 +72,24 @@ class ChangelogTest {
     fun `empty input is empty`() {
         assertTrue(BlockLayout.flow(null).isEmpty())
     }
+
+    @Test
+    fun `an image block is a picture from its PNG`() {
+        val blocks = ApiClient.GSON.fromJson(
+            """[{"type":"image","src":"https://x/a.webp","pngUrl":"https://x/a.png","alt":"Map","width":800,"height":450}]""",
+            Array<Changelog.Block>::class.java,
+        ).toList()
+        assertEquals(listOf(BlockLayout.Flow.Image("https://x/a.png", "Map", 800, 450)), BlockLayout.flow(blocks))
+    }
+
+    @Test
+    fun `an image without a usable PNG is its alt text`() {
+        val noUrl = Changelog.Block("image", alt = "Map", width = 10, height = 10)
+        val noSize = Changelog.Block("image", pngUrl = "https://x/a.png", alt = "Map")
+        for (block in listOf(noUrl, noSize)) {
+            val flow = BlockLayout.flow(listOf(block)).single() as BlockLayout.Flow.Text
+            assertEquals("Map", flow.runs.single().text)
+        }
+        assertTrue(BlockLayout.flow(listOf(Changelog.Block("image"))).isEmpty())
+    }
 }

@@ -53,6 +53,7 @@ class ChangelogScreen(private val parent: Screen?) : Screen(Component.translatab
     private var viewBottom = 0
 
     override fun init() {
+        closed = false
         val panelWidth = minOf(width - 24, 360)
         left = (width - panelWidth) / 2
         right = left + panelWidth

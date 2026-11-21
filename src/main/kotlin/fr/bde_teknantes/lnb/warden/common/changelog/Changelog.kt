@@ -30,6 +30,12 @@ object Changelog {
         val text: String? = null,
         val header: List<List<Inline>>? = null,
         val rows: List<List<List<Inline>>>? = null,
+        /** An image block: [pngUrl] is the PNG copy, [width] and [height] are its size. [src] is a WebP the game can't read. */
+        val src: String? = null,
+        val pngUrl: String? = null,
+        val alt: String? = null,
+        val width: Int? = null,
+        val height: Int? = null,
     )
 
     /**
