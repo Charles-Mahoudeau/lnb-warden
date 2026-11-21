@@ -1,8 +1,10 @@
 package fr.bde_teknantes.lnb.warden.server.api
 
 import fr.bde_teknantes.lnb.warden.common.api.ApiClient
+import fr.bde_teknantes.lnb.warden.common.changelog.Changelog
 import fr.bde_teknantes.lnb.warden.common.api.ApiResult
 import fr.bde_teknantes.lnb.warden.server.ServerConfig
+import java.time.Duration
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 
@@ -163,11 +165,25 @@ object WardenServerApi {
     fun anticheatSession(sessionId: String): CompletableFuture<ApiResult<AnticheatReport>> =
         call("anticheat session", "GET", "/api/warden/server/anticheat/sessions/$sessionId")
 
+    /** The post to show a player who just joined, or null. [lang] is `fr` or `en`. */
+    fun changelogUnseen(uuid: UUID, lang: String): CompletableFuture<ApiResult<Changelog.Unseen>> =
+        call("changelog", "GET", "/api/changelog/server/unseen?player=$uuid&lang=$lang", timeout = CHANGELOG_TIMEOUT)
+
+    /** The player opened the post: LNB stops offering it to them. Safe to repeat. */
+    fun changelogSeen(postId: String, uuid: UUID): CompletableFuture<ApiResult<Unit>> =
+        call("changelog seen", "POST", "/api/changelog/server/posts/$postId/seen", SeenBody(uuid.toString()), CHANGELOG_TIMEOUT)
+
+    private data class SeenBody(val player: String)
+
+    /** The changelog never gets in the way of joining, so it doesn't wait long. */
+    private val CHANGELOG_TIMEOUT: Duration = Duration.ofSeconds(5)
+
     private inline fun <reified T> call(
         what: String,
         method: String,
         path: String,
         body: Any? = null,
+        timeout: Duration? = null,
     ): CompletableFuture<ApiResult<T>> {
         if (!ServerConfig.isApiConfigured) {
             val result = ApiResult.Network(IllegalStateException("api.url and api.token aren't set in lnbwarden-server.toml"))
@@ -175,7 +191,7 @@ object WardenServerApi {
             return CompletableFuture.completedFuture(result)
         }
         // Plain HTTP is allowed here: the server's admin chose api.url, and is warned at startup.
-        return ApiClient.send<T>(ServerConfig.API_URL.get(), method, path, ServerConfig.API_TOKEN.get(), body, requireSecure = false)
+        return ApiClient.send<T>(ServerConfig.API_URL.get(), method, path, ServerConfig.API_TOKEN.get(), body, requireSecure = false, timeout = timeout)
             .thenApply { result ->
                 // A feature LNB turned off answers 503: the API itself is fine.
                 if (!result.isDisabled) ApiHealth.record(what, result)

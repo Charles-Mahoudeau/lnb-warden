@@ -1,9 +1,11 @@
 package fr.bde_teknantes.lnb.warden.client.network
 
 import fr.bde_teknantes.lnb.warden.client.ClientRealNames
+import fr.bde_teknantes.lnb.warden.client.changelog.ChangelogState
 import fr.bde_teknantes.lnb.warden.client.anticheat.ClientFiles
 import fr.bde_teknantes.lnb.warden.client.auth.JoinHandler
 import fr.bde_teknantes.lnb.warden.common.network.AuthChallengePayload
+import fr.bde_teknantes.lnb.warden.common.network.ChangelogNoticePayload
 import fr.bde_teknantes.lnb.warden.common.network.FilesChallengePayload
 import fr.bde_teknantes.lnb.warden.common.network.FilesRequestPayload
 import fr.bde_teknantes.lnb.warden.common.network.RealNamesPayload
@@ -25,5 +27,9 @@ object ClientPayloadHandler {
 
     fun handleFilesChallenge(payload: FilesChallengePayload, context: IPayloadContext) {
         ClientFiles.onChallenge(payload, context)
+    }
+
+    fun handleChangelogNotice(payload: ChangelogNoticePayload, context: IPayloadContext) {
+        ChangelogState.onNotice(payload)
     }
 }

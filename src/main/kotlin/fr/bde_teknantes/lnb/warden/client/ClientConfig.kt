@@ -17,6 +17,10 @@ object ClientConfig {
         )
         .define("serverAddress", "mc.lnb.bde-teknantes.fr")
 
+    val LAST_OPENED: ModConfigSpec.ConfigValue<String> = BUILDER
+        .comment("The newest changelog post you opened. Used to tell you about a newer one. Leave it alone.")
+        .define("lastOpenedChangelog", "")
+
     val SPEC: ModConfigSpec = BUILDER.build()
 
     val apiUrl: String
