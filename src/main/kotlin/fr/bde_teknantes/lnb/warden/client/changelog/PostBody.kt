@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Style
 import net.minecraft.util.FormattedCharSequence
 
 /** A post's body, wrapped to a width and ready to draw at any scroll position. */
-internal class PostBody(private val flow: List<BlockLayout.Flow>) {
+internal class PostBody(private val flow: List<BlockLayout.Flow>, private val images: ChangelogImages) {
     private class Line(
         val text: FormattedCharSequence?,
         val x: Int,
@@ -20,6 +20,9 @@ internal class PostBody(private val flow: List<BlockLayout.Flow>) {
         val well: Boolean = false,
         val bar: Boolean = false,
         val rule: Boolean = false,
+        val image: BlockLayout.Flow.Image? = null,
+        val imageWidth: Int = 0,
+        val imageHeight: Int = 0,
     )
 
     private var lines = emptyList<Line>()
@@ -41,6 +44,14 @@ internal class PostBody(private val flow: List<BlockLayout.Flow>) {
                     y += 4
                     out += Line(null, 0, y, Ui.DIVIDER, rule = true)
                     y += 5
+                }
+                is BlockLayout.Flow.Image -> {
+                    // The size is known before the picture arrives, so nothing moves when it does. Never enlarged.
+                    val scale = minOf(1f, width.coerceAtLeast(40).toFloat() / item.width, MAX_IMAGE_HEIGHT.toFloat() / item.height)
+                    val w = maxOf(1, (item.width * scale).toInt())
+                    val h = maxOf(1, (item.height * scale).toInt())
+                    out += Line(null, 0, y, Ui.DIVIDER, image = item, imageWidth = w, imageHeight = h)
+                    y += h + 6
                 }
                 is BlockLayout.Flow.Text -> {
                     if (item.kind == BlockLayout.Kind.HEADING && y > 0) y += 5
@@ -89,8 +100,10 @@ internal class PostBody(private val flow: List<BlockLayout.Flow>) {
     fun render(g: GuiGraphics, font: Font, left: Int, top: Int, scroll: Int, viewTop: Int, viewBottom: Int) {
         for (line in lines) {
             val y = top + line.y - scroll
-            if (y + lineHeight < viewTop || y > viewBottom) continue
+            if (y + maxOf(lineHeight, line.imageHeight) < viewTop || y > viewBottom) continue
             val x = left + line.x
+            line.image?.let { drawImage(g, font, it, x, y, line.imageWidth, line.imageHeight) }
+            if (line.image != null) continue
             if (line.rule) {
                 g.fill(left, y, left + width, y + 1, line.color)
                 continue
@@ -99,6 +112,18 @@ internal class PostBody(private val flow: List<BlockLayout.Flow>) {
             if (line.bar) g.fill(left, y, left + 2, y + lineHeight, Ui.DIVIDER)
             g.drawString(font, line.text ?: continue, x, y + 1, line.color, false)
         }
+    }
+
+    private fun drawImage(g: GuiGraphics, font: Font, image: BlockLayout.Flow.Image, x: Int, y: Int, w: Int, h: Int) {
+        val state = images.get(image.url)
+        if (state is ChangelogImages.State.Ready) {
+            g.blit(state.location, x, y, w, h, 0f, 0f, state.width, state.height, state.width, state.height)
+            return
+        }
+        // Loading, or failed: the alt text in a well of the picture's size.
+        Ui.inset(g, x, y, x + w, y + h)
+        val label = image.alt.ifBlank { "…" }
+        g.drawCenteredString(font, font.plainSubstrByWidth(label, w - 8), x + w / 2, y + (h - font.lineHeight) / 2, Ui.MUTED)
     }
 
     /** The web link under the mouse, if any. Coordinates are those [render] was given. */
@@ -110,6 +135,8 @@ internal class PostBody(private val flow: List<BlockLayout.Flow>) {
     }
 
     companion object {
+        private const val MAX_IMAGE_HEIGHT = 180
+
         fun isWebLink(link: String) = link.startsWith("https://") || link.startsWith("http://")
     }
 }

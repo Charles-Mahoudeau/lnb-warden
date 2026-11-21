@@ -28,6 +28,9 @@ object BlockLayout {
             val indent: Int = 0,
         ) : Flow
 
+        /** A picture, from its PNG copy ([url]) at that copy's size. [alt] stands in while it loads or when it can't. */
+        data class Image(val url: String, val alt: String, val width: Int, val height: Int) : Flow
+
         data object Rule : Flow
     }
 
@@ -43,6 +46,7 @@ object BlockLayout {
                 "quote" -> text(out, Kind.QUOTE, runs(block.content))
                 "code" -> block.text?.takeIf { it.isNotEmpty() }?.let { text(out, Kind.CODE, listOf(Run(it.trimEnd('\n'), code = true))) }
                 "rule" -> out += Flow.Rule
+                "image" -> image(out, block)
                 "list" -> list(out, block)
                 "table" -> table(out, block)
                 // A type from a newer site: skip it rather than show nothing at all.
@@ -61,6 +65,18 @@ object BlockLayout {
             val text = inline.text?.takeIf { it.isNotEmpty() } ?: return@mapNotNull null
             Run(text, inline.bold == true, inline.italic == true, inline.code == true, inline.link?.takeIf { it.isNotBlank() })
         }
+
+    /** Without a usable PNG the picture is its alt text, as the site does inside lists and tables. */
+    private fun image(out: MutableList<Flow>, block: Changelog.Block) {
+        val url = block.pngUrl
+        val width = block.width ?: 0
+        val height = block.height ?: 0
+        if (url.isNullOrBlank() || width <= 0 || height <= 0) {
+            block.alt?.takeIf { it.isNotBlank() }?.let { text(out, Kind.PARAGRAPH, listOf(Run(it))) }
+            return
+        }
+        out += Flow.Image(url, block.alt.orEmpty(), width, height)
+    }
 
     /** The number of each depth is counted up, and starts again once the list comes back to a shallower one. */
     private fun list(out: MutableList<Flow>, block: Changelog.Block) {

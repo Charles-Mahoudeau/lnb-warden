@@ -38,6 +38,7 @@ class ChangelogPostScreen(
     private var phase = Phase.LOADING
     private var requested = false
     private var closed = false
+    private val images = ChangelogImages()
 
     private var titleLines = emptyList<FormattedCharSequence>()
     private var scroll = 0
@@ -50,6 +51,7 @@ class ChangelogPostScreen(
     private var viewBottom = 0
 
     override fun init() {
+        closed = false
         val panelWidth = minOf(width - 24, 360)
         left = (width - panelWidth) / 2
         right = left + panelWidth
@@ -119,7 +121,7 @@ class ChangelogPostScreen(
             // A site without blocks still answers with the Markdown, which reads fine as plain text.
             val flow = result.body.blocks?.let { BlockLayout.flow(it) }
                 ?: listOf(BlockLayout.Flow.Text(BlockLayout.Kind.PARAGRAPH, listOf(BlockLayout.Run(result.body.body.orEmpty()))))
-            body = PostBody(flow)
+            body = PostBody(flow, images)
             phase = Phase.READY
             ChangelogState.onOpened(preview.id)
         } else {
@@ -209,6 +211,7 @@ class ChangelogPostScreen(
 
     override fun removed() {
         closed = true
+        images.release()
     }
 
     override fun onClose() {

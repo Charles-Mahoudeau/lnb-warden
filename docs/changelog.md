@@ -14,8 +14,9 @@ It stores nothing.
 | `/changelog`                       | Opens the same screen. Client-side only, so it works on any server and in singleplayer.               |
 
 The screen lists posts, newest first (10 at a time, "Load older posts"). A post is drawn from the site's `blocks`:
-headings, paragraphs, quotes, lists, code, tables and rules. Links ask for confirmation before opening. Images aren't
-in the blocks yet (the site sends their alt text), so they show as text.
+headings, paragraphs, quotes, lists, code, tables and rules. Links ask for confirmation before opening. Pictures are `image` blocks: the game loads their PNG copy (`pngUrl`, at most 1000 px wide, never enlarged) from the
+site's own address only, when they come into view, and scales it to the column (at most 180 px high). While it loads,
+or if it fails, the alt text stands in a well of the same size. Pictures inside lists, quotes and tables stay alt text.
 
 ## Who calls what
 
