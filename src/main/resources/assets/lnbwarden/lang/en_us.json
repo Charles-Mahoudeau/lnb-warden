@@ -192,5 +192,17 @@
   "screen.lnbwarden.changelog.lang.en": "English",
   "toast.lnbwarden.changelog": "New on the server",
   "chat.lnbwarden.changelog": "A new changelog is out: %s. Click here or type /changelog to read it again.",
-  "chat.lnbwarden.changelog.hover": "Open the changelog"
+  "chat.lnbwarden.changelog.hover": "Open the changelog",
+
+  "chat.lnbwarden.clearlag.warning": "[ClearLag] Dropped items, experience orbs and hostile mobs will be cleared in %s s.",
+  "actionbar.lnbwarden.clearlag": "Clearing in %s s",
+  "chat.lnbwarden.clearlag.result": "[ClearLag] Cleared %s item(s), %s experience orb(s) and %s hostile mob(s).",
+  "commands.lnbwarden.clearlag.run": "Cleared %s item(s), %s experience orb(s) and %s hostile mob(s).",
+  "commands.lnbwarden.clearlag.reload": "ClearLag countdown restarted. The config file applies by itself when saved.",
+  "commands.lnbwarden.clearlag.status.off": "ClearLag: off",
+  "commands.lnbwarden.clearlag.status": "ClearLag: next clear in %s (%s, average tick %s ms)",
+  "commands.lnbwarden.clearlag.status.normal": "normal interval",
+  "commands.lnbwarden.clearlag.status.lag": "lag interval",
+  "commands.lnbwarden.clearlag.status.never": "ClearLag: no clear since the server started",
+  "commands.lnbwarden.clearlag.status.last": "ClearLag: last clear at %s: %s item(s), %s experience orb(s), %s hostile mob(s)"
 }
