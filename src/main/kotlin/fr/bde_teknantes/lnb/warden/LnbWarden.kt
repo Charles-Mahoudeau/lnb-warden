@@ -6,6 +6,7 @@ import fr.bde_teknantes.lnb.warden.server.ServerConfig
 import fr.bde_teknantes.lnb.warden.server.WardenServer
 import fr.bde_teknantes.lnb.warden.server.anticheat.ServerAnticheat
 import fr.bde_teknantes.lnb.warden.server.auth.ServerAuth
+import fr.bde_teknantes.lnb.warden.server.changelog.ServerChangelog
 import fr.bde_teknantes.lnb.warden.server.events.EventStream
 import fr.bde_teknantes.lnb.warden.server.playtime.ServerPlaytime
 import fr.bde_teknantes.lnb.warden.server.session.ServerRealNames
@@ -47,6 +48,8 @@ class LnbWarden(modBus: IEventBus, container: ModContainer) {
         NeoForge.EVENT_BUS.addListener(EventStream::onServerTick)
         NeoForge.EVENT_BUS.addListener(ServerPlaytime::onServerTick)
         NeoForge.EVENT_BUS.addListener(ServerPlaytime::onPlayerLoggedOut)
+        NeoForge.EVENT_BUS.addListener(ServerChangelog::onPlayerLoggedIn)
+        NeoForge.EVENT_BUS.addListener(ServerChangelog::onPlayerLoggedOut)
         NeoForge.EVENT_BUS.addListener(WardenServer::onStarted)
         NeoForge.EVENT_BUS.addListener(WardenServer::onStopping)
 

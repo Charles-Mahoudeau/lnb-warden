@@ -172,5 +172,25 @@
   "disconnect.lnbwarden.anticheat.banned": "Ces fichiers sont interdits sur le serveur de LNB :\n%s",
   "disconnect.lnbwarden.anticheat.untrusted": "L’anticheat de LNB ne fait plus confiance à votre compte. Contactez l’équipe de LNB.",
   "chat.lnbwarden.anticheat.pack_warning": "L’équipe de LNB va examiner ces packs de ressources : %s. Il pourra vous être demandé de les retirer.",
-  "chat.lnbwarden.anticheat.alert": "[LNB Warden] Alerte de l’anticheat : %s (%s). Voir le site de LNB."
+  "chat.lnbwarden.anticheat.alert": "[LNB Warden] Alerte de l’anticheat : %s (%s). Voir le site de LNB.",
+
+  "screen.lnbwarden.changelog.button": "Changelog",
+  "screen.lnbwarden.changelog.title": "Changelog",
+  "screen.lnbwarden.changelog.read": "Lire le changelog",
+  "screen.lnbwarden.changelog.load_more": "Billets plus anciens",
+  "screen.lnbwarden.changelog.retry": "Réessayer",
+  "screen.lnbwarden.changelog.website": "Ouvrir le site",
+  "screen.lnbwarden.changelog.loading": "Chargement%s",
+  "screen.lnbwarden.changelog.failed": "Le changelog n’a pas pu être chargé.",
+  "screen.lnbwarden.changelog.failed.hint": "Vérifie ta connexion et réessaie.",
+  "screen.lnbwarden.changelog.disabled": "Le changelog est désactivé pour le moment.",
+  "screen.lnbwarden.changelog.empty": "Rien n’a encore été publié.",
+  "screen.lnbwarden.changelog.older": "Ancien",
+  "screen.lnbwarden.changelog.newer": "Récent",
+  "screen.lnbwarden.changelog.only_in": "Disponible uniquement en %s",
+  "screen.lnbwarden.changelog.lang.fr": "français",
+  "screen.lnbwarden.changelog.lang.en": "anglais",
+  "toast.lnbwarden.changelog": "Nouveau sur le serveur",
+  "chat.lnbwarden.changelog": "Un nouveau changelog est paru : %s. Clique ici ou tape /changelog pour le relire.",
+  "chat.lnbwarden.changelog.hover": "Ouvrir le changelog"
 }

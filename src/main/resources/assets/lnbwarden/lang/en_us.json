@@ -172,5 +172,25 @@
   "disconnect.lnbwarden.anticheat.banned": "These files are banned from LNB's server:\n%s",
   "disconnect.lnbwarden.anticheat.untrusted": "LNB's anticheat no longer trusts your account. Contact LNB's staff.",
   "chat.lnbwarden.anticheat.pack_warning": "LNB's staff will review these resource packs: %s. You may be asked to remove them.",
-  "chat.lnbwarden.anticheat.alert": "[LNB Warden] Anticheat alert: %s (%s). See LNB's website."
+  "chat.lnbwarden.anticheat.alert": "[LNB Warden] Anticheat alert: %s (%s). See LNB's website.",
+
+  "screen.lnbwarden.changelog.button": "Changelog",
+  "screen.lnbwarden.changelog.title": "Changelog",
+  "screen.lnbwarden.changelog.read": "Read the changelog",
+  "screen.lnbwarden.changelog.load_more": "Load older posts",
+  "screen.lnbwarden.changelog.retry": "Try again",
+  "screen.lnbwarden.changelog.website": "Open the website",
+  "screen.lnbwarden.changelog.loading": "Loading%s",
+  "screen.lnbwarden.changelog.failed": "The changelog couldn’t be loaded.",
+  "screen.lnbwarden.changelog.failed.hint": "Check your connection and try again.",
+  "screen.lnbwarden.changelog.disabled": "The changelog is switched off for now.",
+  "screen.lnbwarden.changelog.empty": "Nothing has been published yet.",
+  "screen.lnbwarden.changelog.older": "Older",
+  "screen.lnbwarden.changelog.newer": "Newer",
+  "screen.lnbwarden.changelog.only_in": "Only available in %s",
+  "screen.lnbwarden.changelog.lang.fr": "French",
+  "screen.lnbwarden.changelog.lang.en": "English",
+  "toast.lnbwarden.changelog": "New on the server",
+  "chat.lnbwarden.changelog": "A new changelog is out: %s. Click here or type /changelog to read it again.",
+  "chat.lnbwarden.changelog.hover": "Open the changelog"
 }
