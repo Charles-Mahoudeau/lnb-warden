@@ -31,7 +31,7 @@
   "lnbwarden.configuration.banReason": "Motif de bannissement",
 
   "screen.lnbwarden.link.title": "Associer LNB Warden à ton compte LNB",
-  "screen.lnbwarden.link.requesting": "Demande d’un code à LNB%s",
+  "screen.lnbwarden.link.requesting": "Demande d’un code à LNB %s",
   "screen.lnbwarden.link.instructions": "Saisis ce code sur %s",
   "screen.lnbwarden.link.time_left": "Expire dans %s",
   "screen.lnbwarden.link.open": "Ouvrir le navigateur",
@@ -48,7 +48,7 @@
   "toast.lnbwarden.linked": "Associé à %s",
 
   "screen.lnbwarden.status.not_linked": "Non associé à LNB",
-  "screen.lnbwarden.status.checking": "Vérification de ton association LNB%s",
+  "screen.lnbwarden.status.checking": "Vérification de ton association LNB %s",
   "screen.lnbwarden.status.linked": "LNB : %s",
   "screen.lnbwarden.status.accounts": "Comptes Minecraft : %s (%s)",
   "screen.lnbwarden.status.no_accounts": "Aucun compte Minecraft lié pour l’instant (%s)",
@@ -180,7 +180,7 @@
   "screen.lnbwarden.changelog.load_more": "Billets plus anciens",
   "screen.lnbwarden.changelog.retry": "Réessayer",
   "screen.lnbwarden.changelog.website": "Ouvrir le site",
-  "screen.lnbwarden.changelog.loading": "Chargement%s",
+  "screen.lnbwarden.changelog.loading": "Chargement %s",
   "screen.lnbwarden.changelog.failed": "Le changelog n’a pas pu être chargé.",
   "screen.lnbwarden.changelog.failed.hint": "Vérifie ta connexion et réessaie.",
   "screen.lnbwarden.changelog.disabled": "Le changelog est désactivé pour le moment.",
