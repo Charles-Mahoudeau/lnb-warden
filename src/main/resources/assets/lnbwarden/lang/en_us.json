@@ -31,7 +31,7 @@
   "lnbwarden.configuration.banReason": "Ban Reason",
 
   "screen.lnbwarden.link.title": "Link LNB Warden to your LNB account",
-  "screen.lnbwarden.link.requesting": "Asking LNB for a code%s",
+  "screen.lnbwarden.link.requesting": "Asking LNB for a code %s",
   "screen.lnbwarden.link.instructions": "Enter this code on %s",
   "screen.lnbwarden.link.time_left": "Expires in %s",
   "screen.lnbwarden.link.open": "Open in browser",
@@ -48,7 +48,7 @@
   "toast.lnbwarden.linked": "Linked as %s",
 
   "screen.lnbwarden.status.not_linked": "Not linked to LNB",
-  "screen.lnbwarden.status.checking": "Checking your LNB link%s",
+  "screen.lnbwarden.status.checking": "Checking your LNB link %s",
   "screen.lnbwarden.status.linked": "LNB: %s",
   "screen.lnbwarden.status.accounts": "Minecraft accounts: %s (%s)",
   "screen.lnbwarden.status.no_accounts": "No Minecraft account linked yet (%s)",
@@ -180,7 +180,7 @@
   "screen.lnbwarden.changelog.load_more": "Load older posts",
   "screen.lnbwarden.changelog.retry": "Try again",
   "screen.lnbwarden.changelog.website": "Open the website",
-  "screen.lnbwarden.changelog.loading": "Loading%s",
+  "screen.lnbwarden.changelog.loading": "Loading %s",
   "screen.lnbwarden.changelog.failed": "The changelog couldn’t be loaded.",
   "screen.lnbwarden.changelog.failed.hint": "Check your connection and try again.",
   "screen.lnbwarden.changelog.disabled": "The changelog is switched off for now.",
